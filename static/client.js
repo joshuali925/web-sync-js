@@ -24,7 +24,7 @@ $(document).ready(function () {
         $('#textarea').val(text);
     })
 
-    $('#textarea').change(delay(function () {
+    $('#textarea').on('change keyup keypress', delay(function () {
         let text = $('#textarea').val();
         socket.emit('sync text', text)
         console.log(text);
