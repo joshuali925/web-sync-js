@@ -14,12 +14,22 @@ $(document).ready(function () {
         console.log('update received ' + text)
         $('#textarea').val(text);
     })
-
+    
     $('#textarea').keyup(delay(function () {
         let text = $('#textarea').val();
         socket.emit('sync text', text)
         console.log(text);
     }, 500));
-
+    
+    $('#qrcodetext').hover(() => {
+        $('#qrcodeimg').show();
+        $('#qrcodetext').hide();
+    });
+    $('#qrcodeimg').hover(() => { }, () => {
+        $('#qrcodetext').show();
+        $('#qrcodeimg').hide();
+    });
+    
 });
+
 

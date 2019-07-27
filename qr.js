@@ -1,8 +1,3 @@
-function createQR(port) {
-    let QRCode = require('qrcode');
-    QRCode.toFile('./static/qr.png', getURL(port));
-}
-
 function getIPAddress() {
     let interfaces = require('os').networkInterfaces();
     for (let devName in interfaces) {
@@ -18,7 +13,14 @@ function getIPAddress() {
 
 function getURL(port) {
     let ip = getIPAddress();
-    return `http://${ip}:${port}/`;
+    return `http://${ip}:${port}/login`;
+}
+
+function createQR(port) {
+    let qrcode = require('qrcode');
+    qrcode.toFile('./static/qr.png', getURL(port), {
+        margin: 0
+    });
 }
 
 module.exports.createQR = createQR;
