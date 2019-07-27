@@ -21,8 +21,7 @@
 </body>
 
 <script>
-    let socket = io();
-    socket.on('refresh', function () {
+    io().on('refresh', function () {
         window.location.reload(true);
     })
 </script>

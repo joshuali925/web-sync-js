@@ -1,12 +1,21 @@
 let socket = io();
 
-
 function delay(fn, ms) {
-    let timer = 0
+    let timer = 0;
     return function (...args) {
-        clearTimeout(timer)
-        timer = setTimeout(fn.bind(this, ...args), ms || 0)
+        clearTimeout(timer);
+        timer = setTimeout(fn.bind(this, ...args), ms || 0);
     }
+}
+
+function copy_all() {
+    $('#textarea').select();
+    document.execCommand('copy');
+    show_alert('Copied!');
+}
+
+function show_alert(message) {
+    $("#alert").html(message).slideDown(200, () => $(this).show()).delay(1000).slideUp(200, () => $(this).hide());
 }
 
 $(document).ready(function () {
@@ -14,23 +23,20 @@ $(document).ready(function () {
         console.log('update received ' + text)
         $('#textarea').val(text);
     })
-    
-    $('#textarea').keyup(delay(function () {
+
+    $('#textarea').change(delay(function () {
         let text = $('#textarea').val();
         socket.emit('sync text', text)
         console.log(text);
     }, 500));
-    
+
     $('#qrcodetext').hover(() => {
-        $('#qrcodeimg').show('fast');
+        $('#qrcodeimg').fadeIn('fast');
     });
-    $('#qrcodeimg').hover(() => { }, () => {
+    $('#qrcodeimg').hover(() => {}, () => {
         $('#qrcodeimg').fadeOut('slow');
     });
-    $('#qrcodeimg').click(() => { }, () => {
+    $('#qrcodeimg').click(() => {}, () => {
         $('#qrcodeimg').fadeOut('slow');
     });
-    
 });
-
-

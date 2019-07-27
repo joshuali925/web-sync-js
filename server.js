@@ -30,11 +30,14 @@ app.get('/login', (req, res) => {
     res.redirect('/');
 });
 
+app.get('/files', (req, res) => {
+    res.sendFile(__dirname + '/index.html');
+});
+
 io.on('connection', (socket) => {
     console.log('a client connected');
     socket.on('sync text', (text) => {
-        console.log('received ' + text)
-        io.emit('update textarea', text)
+        console.log('received ' + text);
+        io.emit('update textarea', text);
     })
 })
-
