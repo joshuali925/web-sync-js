@@ -1,6 +1,6 @@
 let socket = io();
 
-function delay(fn, ms) {
+function wait(fn, ms) {
     let timer = 0;
     return function (...args) {
         clearTimeout(timer);
@@ -24,7 +24,7 @@ $(document).ready(function () {
         $('#textarea').val(text);
     })
 
-    $('#textarea').on('change keyup keypress', delay(function () {
+    $('#textarea').on('change keyup keypress', wait(function () {
         let text = $('#textarea').val();
         socket.emit('sync text', text)
         console.log(text);
