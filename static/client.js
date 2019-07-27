@@ -22,12 +22,13 @@ $(document).ready(function () {
     }, 500));
     
     $('#qrcodetext').hover(() => {
-        $('#qrcodeimg').show();
-        $('#qrcodetext').hide();
+        $('#qrcodeimg').show('fast');
     });
     $('#qrcodeimg').hover(() => { }, () => {
-        $('#qrcodetext').show();
-        $('#qrcodeimg').hide();
+        $('#qrcodeimg').fadeOut('slow');
+    });
+    $('#qrcodeimg').click(() => { }, () => {
+        $('#qrcodeimg').fadeOut('slow');
     });
     
 });

@@ -15,9 +15,9 @@
 </head>
 
 <body>
+    <img class="img-fluid img-thumbnail" src="qr.png" id="qrcodeimg">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="/" id="qrcodetext" data-image=>QRCode</a>
-        <img class="img-fluid img-thumbnail" src="qr.png" id="qrcodeimg">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -34,11 +34,11 @@
         </div>
     </nav>
     <div class="container-fluid">
-        <div class="text-center">SyncPad</div>
-    </div>
-    <div class="container-fluid">
         <div class="form-group">
             <textarea class="form-control" id="textarea" rows="18"></textarea>
+        </div>
+        <div class="text-center">
+            <button type="button" class="btn btn-success text-center">Copy All</button>
         </div>
     </div>
 </body>
