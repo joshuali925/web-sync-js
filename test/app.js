@@ -1,26 +1,23 @@
-var express = require('express');
-var formidable = require('formidable');
-
+var express = require("express");
 var app = express();
+const fileUpload = require('express-fileupload');
+//npm install ejs, express, express-fileupload
 
-app.get('/', function (req, res){
-    res.sendFile(__dirname + '/index.html');
+//middleware
+app.use(express.static(__dirname));
+app.set('view engine', 'ejs');
+app.use(fileUpload());
+
+app.get('/inputFile', function(req, res){
+  res.render('inputt');
 });
 
-app.post('/', function (req, res){
-    var form = new formidable.IncomingForm();
+app.post('/upload', function(req, res) {
+  // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
+   var startup_image = req.files.foo;
+   var fileName = req.body.fileName;
+   // Use the mv() method to place the file somewhere on your server
+   startup_image.mv(__dirname + '/images/' + fileName + '.jpg');
+ });
 
-    form.parse(req);
-
-    form.on('fileBegin', function (name, file){
-        file.path = __dirname + '/uploads/' + file.name;
-    });
-
-    form.on('file', function (name, file){
-        console.log('Uploaded ' + file.name);
-    });
-
-    res.sendFile(__dirname + '/index.html');
-});
-
-app.listen(3000);
+app.listen(8000);

@@ -40,22 +40,11 @@ app.get('/upload', (req, res) => {
     });
 });
 
-app.post('/upload_file', function (req, res) {
-    var form = new formidable.IncomingForm();
-    form.parse(req, (err, fields, files) => {
-        console.log(files)
-        console.log(fields)
-    });
-    form.on('fileBegin', function (name, file){
-        file.path = __dirname + '/uploads/' + file.name;
-    });
-    form.on('file', function (name, file){
-        console.log('Uploaded ' + file.name);
-    });
-    // res.render('index', {
-    //     page: './partials/upload'
-    // });
+app.post('/upload', function(req, res) {
+    // Uploaded files:
+    console.log(req.files);
 });
+  
 
 io.on('connection', (socket) => {
     console.log('a client connected');
