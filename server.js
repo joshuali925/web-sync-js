@@ -15,7 +15,7 @@ app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, 'static')));
 
 http.listen(port, function () {
-    console.log('http://localhost:' + port);
+    console.log(`http://localhost:${port}/`);
 });
 
 app.get('/', function (req, res) {
