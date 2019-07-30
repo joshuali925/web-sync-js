@@ -1,3 +1,4 @@
+let formidable = require('formidable');
 let express = require('express');
 let app = express();
 let http = require('http').Server(app);
@@ -37,6 +38,23 @@ app.get('/upload', (req, res) => {
     res.render('index', {
         page: './partials/upload'
     });
+});
+
+app.post('/upload_file', function (req, res) {
+    var form = new formidable.IncomingForm();
+    form.parse(req, (err, fields, files) => {
+        console.log(files)
+        console.log(fields)
+    });
+    form.on('fileBegin', function (name, file){
+        file.path = __dirname + '/uploads/' + file.name;
+    });
+    form.on('file', function (name, file){
+        console.log('Uploaded ' + file.name);
+    });
+    // res.render('index', {
+    //     page: './partials/upload'
+    // });
 });
 
 io.on('connection', (socket) => {

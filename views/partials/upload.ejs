@@ -1,23 +1,21 @@
 <div class="container-fluid">
-    <div class="input-group">
-        <div class="custom-file">
-            <form method='post' action='upload' enctype="multipart/form-data">
+    <form method="post" action="upload_file" enctype="multipart/form-data">
+        <div class="input-group">
+            <div class="custom-file">
                 <input type="file" class="custom-file-input" id="fileinput" multiple>
                 <label class="custom-file-label" for="fileinput">Choose file</label>
-                <input type='submit'>
-            </form>
+            </div>
+            <div class="input-group-append">
+                <button class="btn btn-success"><i class="fa fa-fw fa-upload"></i> Upload</button>
+            </div>
         </div>
-        <div class="input-group-append">
-            <button type="submit" class="btn btn-success"><i class="fa fa-fw fa-upload"></i> Upload</button>
-        </div>
-    </div>
+    </form>
     <ul class="list-group list-group-flush" id="filelist">
     </ul>
 </div>
 
 <script>
     $('#fileinput').on('change', function () {
-        //get the file name
         let files = document.getElementById('fileinput').files;
         $(this).next('.custom-file-label').html(`${files.length} files selected`);
         for (const file of files) {
