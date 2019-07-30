@@ -4,9 +4,3 @@
     position: absolute;
     z-index: 1000;
 }
-
-#alert {
-    display: none;
-    position: absolute;
-    z-index: 1000;
-}

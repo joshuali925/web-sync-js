@@ -1,0 +1,13 @@
+<div class="container-fluid">
+    <div class="form-group" style="padding-top: 1vh">
+        <textarea class="form-control" id="textarea" style="height: 70vh"></textarea>
+    </div>
+    <div class="alert alert-success" role="alert" id="alert" style="display: none; position: absolute;z-index: 1000;"></div>
+    <div class="text-center">
+        <button type="button" onclick="copy_all()" id="copybutton" class="btn btn-success text-center"><i
+                class="fa fa-clipboard"></i> Copy</button>
+        <button type="button" onclick="clear_all()" id="clearbutton" class="btn btn-danger text-center"><i
+                class="fa fa-trash-o"></i> Clear</button>
+    </div>
+</div>
+<script src="syncpad.js"></script>

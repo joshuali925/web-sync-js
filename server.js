@@ -11,6 +11,7 @@ let args = process.argv.slice(2);
 let port = args.length > 0 ? parseInt(args[0]) : 8888;
 qr.createQR(port);
 
+app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, 'static')));
 
 http.listen(port, function () {
@@ -19,9 +20,11 @@ http.listen(port, function () {
 
 app.get('/', function (req, res) {
     if (logged_in)
-        res.sendFile(__dirname + '/index.html');
+        res.render('index', {
+            page: './partials/syncpad'
+        });
     else
-        res.sendFile(__dirname + '/qr.html');
+        res.render('qr');
 });
 
 app.get('/login', (req, res) => {
@@ -30,8 +33,8 @@ app.get('/login', (req, res) => {
     res.redirect('/');
 });
 
-app.get('/files', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+app.get('/upload', (req, res) => {
+    res.render('upload');
 });
 
 io.on('connection', (socket) => {
