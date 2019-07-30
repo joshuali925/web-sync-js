@@ -8,7 +8,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.7/css/fileinput.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.7/css/fileinput.css" media="all"
+        rel="stylesheet" type="text/css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
@@ -17,7 +18,7 @@
 </head>
 
 <body>
-    <img class="img-fluid img-thumbnail" src="qr_small.png" id="qrcodeimg">
+    <img class="img-fluid img-thumbnail" src="images/qr_small.png" id="qrcodeimg">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="/" id="qrcodetext" data-image=>QRCode</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
@@ -35,8 +36,19 @@
             </ul>
         </div>
     </nav>
-    
+
     <%- include(page) %>
+    <script>
+        $('#qrcodetext').hover(() => {
+            $('#qrcodeimg').fadeIn('fast');
+        });
+        $('#qrcodeimg').hover(() => {}, () => {
+            $('#qrcodeimg').fadeOut('slow');
+        });
+        $('#qrcodeimg').click(() => {}, () => {
+            $('#qrcodeimg').fadeOut('slow');
+        });
+    </script>
 </body>
 
 </html>

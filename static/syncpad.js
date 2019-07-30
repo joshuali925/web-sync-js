@@ -51,14 +51,4 @@ $(document).ready(function () {
         socket.emit('sync text', text)
         console.log(text);
     }, 500));
-
-    $('#qrcodetext').hover(() => {
-        $('#qrcodeimg').fadeIn('fast');
-    });
-    $('#qrcodeimg').hover(() => {}, () => {
-        $('#qrcodeimg').fadeOut('slow');
-    });
-    $('#qrcodeimg').click(() => {}, () => {
-        $('#qrcodeimg').fadeOut('slow');
-    });
 });

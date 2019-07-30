@@ -3,7 +3,7 @@ let app = express();
 let http = require('http').Server(app);
 let io = require('socket.io')(http);
 let path = require('path');
-let qr = require('./qr');
+let qr = require('./functions');
 
 let sockets = {};
 let logged_in = false;
@@ -24,7 +24,7 @@ app.get('/', function (req, res) {
             page: './partials/syncpad'
         });
     else
-        res.render('qr');
+        res.render('login');
 });
 
 app.get('/login', (req, res) => {

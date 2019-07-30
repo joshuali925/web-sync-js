@@ -19,11 +19,11 @@ function getURL(port) {
 function createQR(port) {
     let qrcode = require('qrcode');
     let url = getURL(port);
-    qrcode.toFile('./static/qr.png', url, {
+    qrcode.toFile('./static/images/qr.png', url, {
         width: 150,
         height: 150,
     });
-    qrcode.toFile('./static/qr_small.png', url, {
+    qrcode.toFile('./static/images/qr_small.png', url, {
         margin: 0
     });
 }
