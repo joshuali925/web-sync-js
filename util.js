@@ -24,8 +24,17 @@ function createQR(port) {
         height: 150,
     });
     qrcode.toFile('./static/images/qr_small.png', url, {
+        width: 100,
+        height: 100,
         margin: 0
     });
 }
 
+function save_file(file, save_dir = '/mnt/z/download', filename = undefined) {
+    if (!filename)
+        filename = file.name;
+    file.mv(`${save_dir}/${filename}`);
+}
+
+module.exports.save_file = save_file;
 module.exports.createQR = createQR;
