@@ -1,14 +1,14 @@
-let express = require('express');
-let fileUpload = require('express-fileupload');
-let app = express();
-let http = require('http').Server(app);
-let io = require('socket.io')(http);
-let path = require('path');
-let util = require('./util');
+const express = require('express');
+const fileUpload = require('express-fileupload');
+const app = express();
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+const path = require('path');
+const util = require('./util');
 
+const args = process.argv.slice(2);
+const port = args.length > 0 ? parseInt(args[0]) : 8888;
 let logged_in = false;
-let args = process.argv.slice(2);
-let port = args.length > 0 ? parseInt(args[0]) : 8888;
 util.createQR(port);
 
 app.set("view engine", "ejs");
@@ -43,11 +43,7 @@ app.get('/upload', (req, res) => {
 app.post('/upload', function (req, res) {
     let files = req.files.file;
     if (files.length) { // if multiple files uploaded
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            util.save_file(file);
-        }
-        // files.forEach((file) => util.save_file(file));
+        files.forEach((file, i) => util.save_file(file));
     } else {
         util.save_file(files);
     }

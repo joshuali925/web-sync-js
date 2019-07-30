@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 function getIPAddress() {
     let interfaces = require('os').networkInterfaces();
     for (let devName in interfaces) {
@@ -33,6 +35,8 @@ function createQR(port) {
 function save_file(file, save_dir = '/mnt/z/download', filename = undefined) {
     if (!filename)
         filename = file.name;
+    if (!fs.existsSync(save_dir))
+        fs.mkdirSync(save_dir);
     file.mv(`${save_dir}/${filename}`);
 }
 
