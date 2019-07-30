@@ -34,7 +34,9 @@ app.get('/login', (req, res) => {
 });
 
 app.get('/upload', (req, res) => {
-    res.render('upload');
+    res.render('index', {
+        page: './partials/upload'
+    });
 });
 
 io.on('connection', (socket) => {
