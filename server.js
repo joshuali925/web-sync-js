@@ -9,6 +9,7 @@ const util = require('./util');
 const args = process.argv.slice(2);
 const port = args.length > 0 ? parseInt(args[0]) : 8888;
 let logged_in = false;
+let curr_text = ''
 util.createQR(port);
 
 app.set("view engine", "ejs");
@@ -52,8 +53,10 @@ app.post('/upload', function (req, res) {
 
 io.on('connection', (socket) => {
     console.log('a client connected');
+    socket.emit('update textarea', curr_text);
     socket.on('sync text', (text) => {
         console.log('received ' + text);
+        curr_text = text;
         io.emit('update textarea', text);
     })
 })
