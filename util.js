@@ -21,11 +21,14 @@ function getURL(port) {
 function createQR(port) {
     let qrcode = require('qrcode');
     let url = getURL(port);
-    qrcode.toFile('./static/images/qr.png', url, {
+    let path = './static/images';
+    if (!fs.existsSync(path))
+        fs.mkdirSync(path);
+    qrcode.toFile(path + '/qr.png', url, {
         width: 150,
         height: 150,
     });
-    qrcode.toFile('./static/images/qr_small.png', url, {
+    qrcode.toFile(path + '/qr_small.png', url, {
         width: 100,
         height: 100,
         margin: 0
