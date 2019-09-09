@@ -3,21 +3,25 @@ const fileUpload = require('express-fileupload');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
+const opn = require('opn');
 const path = require('path');
 const util = require('./util');
 
 const args = process.argv.slice(2);
 const port = args.length > 0 ? parseInt(args[0]) : 8888;
+const local_url = util.getURL(port);
+
 let logged_in = false;
 let curr_text = ''
-util.createQR(port);
+util.createQR(local_url);
 
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, 'static')));
 app.use(fileUpload());
 
 http.listen(port, function () {
-    console.log(`http://localhost:${port}/`);
+    console.log(local_url);
+    opn(`http://localhost:${port}/`);
 });
 
 app.get('/', function (req, res) {
@@ -55,7 +59,7 @@ io.on('connection', (socket) => {
     console.log('a client connected');
     socket.emit('update textarea', curr_text);
     socket.on('sync text', (text) => {
-        console.log('received ' + text);
+        console.log('> ' + text);
         curr_text = text;
         io.emit('update textarea', text);
     })

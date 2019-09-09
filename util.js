@@ -14,14 +14,15 @@ function getIPAddress() {
 }
 
 function getURL(port) {
-    let ip = getIPAddress();
-    return `http://${ip}:${port}/login`;
+    const ip = getIPAddress();
+    return `http://${ip}:${port}/`;
 }
 
-function createQR(port) {
-    let qrcode = require('qrcode');
-    let url = getURL(port);
-    let path = './static/images';
+function createQR(url) {
+    // QR codes for login, url is http://local_ip:port/login
+    const qrcode = require('qrcode');
+    const path = './static/images';
+    url += 'login';
     if (!fs.existsSync(path))
         fs.mkdirSync(path);
     qrcode.toFile(path + '/qr.png', url, {
@@ -43,5 +44,4 @@ function save_file(file, save_dir = '/mnt/z/download', filename = undefined) {
     file.mv(`${save_dir}/${filename}`);
 }
 
-module.exports.save_file = save_file;
-module.exports.createQR = createQR;
+module.exports = {getURL, createQR, save_file};
