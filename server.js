@@ -25,12 +25,12 @@ http.listen(port, function () {
 });
 
 app.get('/', function (req, res) {
-    if (logged_in)
+    // if (logged_in)
         res.render('index', {
             page: './partials/syncpad'
         });
-    else
-        res.render('login');
+    // else
+    //     res.render('login');
 });
 
 app.get('/login', (req, res) => {
