@@ -41,6 +41,8 @@ function show_alert(message) {
 }
 
 $(document).ready(function () {
+    $('#textarea').focus();
+
     socket.on('update textarea', function (text) {
         console.log('update received ' + text);
         $('#textarea').val(text);
