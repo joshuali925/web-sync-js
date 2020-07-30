@@ -33,6 +33,11 @@ app.get('/', function (req, res) {
     //     res.render('login');
 });
 
+app.get('/api/get_text', (req, res) => {
+    res.send(curr_text);
+});
+
+
 app.get('/login', (req, res) => {
     logged_in = true;
     io.emit('refresh');
