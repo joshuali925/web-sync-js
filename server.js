@@ -34,7 +34,7 @@ app.get('/', function (req, res) {
 });
 
 app.get('/api/get_text', (req, res) => {
-    res.send(curr_text);
+    res.send(curr_text.split('\n').join('<br>'));
 });
 
 
