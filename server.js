@@ -68,4 +68,24 @@ io.on('connection', (socket) => {
         curr_text = text;
         io.emit('update textarea', text);
     })
+
+    socket.on('generate qr', () => {
+        util.createTextQR(curr_text)
+        .then(() => {
+            console.log('QR created');
+            io.emit('qr ready', 1);
+        })
+        .catch(() => {
+            console.log('too long, splitting qr code');
+            const half = curr_text.length / 2;
+            return Promise.all([
+              util.createTextQR(curr_text.substr(0, half), 0),
+              util.createTextQR(curr_text.substr(half), 1)
+            ])
+        })
+        .then(() => {
+            console.log('QR created');
+            io.emit('qr ready', 2);
+        })
+    })
 })

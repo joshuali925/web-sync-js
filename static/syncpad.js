@@ -28,6 +28,10 @@ let copy_all = function () {
     show_alert('All copied!');
 };
 
+const generate_qr = () => {
+    socket.emit('generate qr');
+};
+
 let clear_all = () => {
     $('#textarea').val('');
     show_alert('Cleared!');
@@ -46,6 +50,13 @@ $(document).ready(function () {
     socket.on('update textarea', function (text) {
         console.log('update received ' + text);
         $('#textarea').val(text);
+    })
+
+    socket.on('qr ready', (length) => {
+        $('.modal-body').empty();
+        for (var i = length - 1; i >= 0; i--) {
+            $('.modal-body').prepend(`<img id="qrcode-img-${i}" src="images/temp/temp_qr${i}.png" width="500" height="500" />`)
+        }
     })
 
     $('#textarea').on('change keyup keypress touchend', wait(function () {

@@ -41,6 +41,17 @@ function createQR(url) {
     });
 }
 
+function createTextQR(text, index = 0) {
+    const qrcode = require('qrcode');
+    const path = './static/images/temp';
+    if (!fs.existsSync(path))
+        fs.mkdirSync(path);
+    return qrcode.toFile(path + `/temp_qr${index}.png`, text, {
+        width: 500,
+        height: 500,
+    })
+}
+
 function save_file(file, save_dir = '/mnt/z/download', filename = undefined) {
     if (!filename)
         filename = file.name;
@@ -49,4 +60,4 @@ function save_file(file, save_dir = '/mnt/z/download', filename = undefined) {
     file.mv(`${save_dir}/${filename}`);
 }
 
-module.exports = {getURL, createQR, save_file};
+module.exports = {getURL, createQR, createTextQR, save_file};
