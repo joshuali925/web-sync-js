@@ -26,9 +26,9 @@ http.listen(port, function () {
 
 app.get('/', function (req, res) {
     // if (logged_in)
-        res.render('index', {
-            page: './partials/syncpad'
-        });
+    res.render('index', {
+        page: './partials/syncpad'
+    });
     // else
     //     res.render('login');
 });
@@ -70,22 +70,20 @@ io.on('connection', (socket) => {
     })
 
     socket.on('generate qr', () => {
-        util.createTextQR(curr_text)
-        .then(() => {
-            console.log('QR created');
-            io.emit('qr ready', 1);
-        })
-        .catch(() => {
-            console.log('too long, splitting qr code');
-            const half = curr_text.length / 2;
-            return Promise.all([
-              util.createTextQR(curr_text.substr(0, half), 0),
-              util.createTextQR(curr_text.substr(half), 1)
-            ])
-        })
-        .then(() => {
-            console.log('QR created');
-            io.emit('qr ready', 2);
-        })
+        const chunks = [], len = 777;
+        let i = 0;
+        while (i < curr_text.length) {
+            chunks.push(curr_text.substring(i, i + len));
+            i += len;
+        }
+
+        Promise.all(chunks.map((chunk, i) => util.createTextQR(chunk, i)))
+            .then(() => {
+                console.log(chunks.length, 'QR created');
+                io.emit('qr ready', chunks.length);
+            })
+            .catch((e) => {
+                console.log('error', e);
+            });
     })
 })

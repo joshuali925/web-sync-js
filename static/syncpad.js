@@ -55,13 +55,12 @@ $(document).ready(function () {
     socket.on('qr ready', (length) => {
         $('.modal-body').empty();
         for (var i = length - 1; i >= 0; i--) {
-            $('.modal-body').prepend(`<img id="qrcode-img-${i}" src="images/temp/temp_qr${i}.png" width="500" height="500" />`)
+            $('.modal-body').prepend(`<img id="qrcode-img-${i}" src="images/temp/temp_qr${i}.png?${new Date().getTime()}" width="500" height="500" />`)
         }
     })
 
     $('#textarea').on('change keyup keypress touchend', wait(function () {
         let text = $('#textarea').val();
         socket.emit('sync text', text)
-        console.log(text);
     }, 500));
 });
