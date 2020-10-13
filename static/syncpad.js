@@ -1,7 +1,5 @@
 let socket = io();
 
-// console.log = () => { };
-
 function wait(fn, ms) {
     let timer = 0;
     return function (...args) {
@@ -48,7 +46,7 @@ $(document).ready(function () {
     $('#textarea').focus();
 
     socket.on('update textarea', function (text) {
-        console.log('update received ' + text);
+        // console.log('update received ' + text);
         $('#textarea').val(text);
     })
 

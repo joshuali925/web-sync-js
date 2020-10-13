@@ -53,9 +53,9 @@ app.get('/upload', (req, res) => {
 app.post('/upload', function (req, res) {
     let files = req.files.file;
     if (files.length) { // if multiple files uploaded
-        files.forEach((file, i) => util.save_file(file));
+        files.forEach((file, i) => util.saveFile(file));
     } else {
-        util.save_file(files);
+        util.saveFile(files);
     }
     res.redirect('/upload');
 });
@@ -87,3 +87,9 @@ io.on('connection', (socket) => {
             });
     })
 })
+
+process.on('SIGINT', function() {
+    console.log('Deleting temp QRs, exiting...');
+    util.clearTemp();
+    process.exit();
+});

@@ -52,12 +52,27 @@ function createTextQR(text, index = 0) {
     })
 }
 
-function save_file(file, save_dir = '/mnt/z/download', filename = undefined) {
-    if (!filename)
-        filename = file.name;
-    if (!fs.existsSync(save_dir))
-        fs.mkdirSync(save_dir);
-    file.mv(`${save_dir}/${filename}`);
+function saveFile(file, saveDir = '/mnt/z/download', fileName = undefined) {
+    if (!fileName)
+        fileName = file.name;
+    if (!fs.existsSync(saveDir))
+        fs.mkdirSync(saveDir);
+    file.mv(`${save_dir}/${fileName}`);
 }
 
-module.exports = {getURL, createQR, createTextQR, save_file};
+function clearTemp() {
+    const path = './static/images/temp';
+    if (fs.existsSync(path)) {
+      fs.readdirSync(path).forEach((file, index) => {
+        const curPath = `${path}/${file}`;
+        if (fs.lstatSync(curPath).isDirectory()) { // recurse
+          deleteFolderRecursive(curPath);
+        } else { // delete file
+          fs.unlinkSync(curPath);
+        }
+      });
+      fs.rmdirSync(path);
+    }
+}
+
+module.exports = {getURL, createQR, createTextQR, saveFile, clearTemp};
