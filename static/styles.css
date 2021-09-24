@@ -1,6 +1,6 @@
 #qrcodeimg {
-    cursor: none;
-    display: none;
-    position: absolute;
-    z-index: 1000;
+  cursor: none;
+  display: none;
+  position: absolute;
+  z-index: 1000;
 }
