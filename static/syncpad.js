@@ -1,6 +1,6 @@
 let socket = io();
 
-function wait(fn, ms) {
+function debounce(fn, ms) {
     let timer = 0;
     return function (...args) {
         clearTimeout(timer);
@@ -32,6 +32,7 @@ const generate_qr = () => {
 
 let clear_all = () => {
     $('#textarea').val('');
+    socket.emit('sync text', '');
     show_alert('Cleared!');
 };
 
@@ -57,7 +58,7 @@ $(document).ready(function () {
         }
     })
 
-    $('#textarea').on('change keyup keypress touchend', wait(function () {
+    $('#textarea').on('change keyup keypress touchend', debounce(function () {
         let text = $('#textarea').val();
         socket.emit('sync text', text)
     }, 500));

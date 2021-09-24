@@ -26,7 +26,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
-                <li class="nav-item active">
+                <li class="nav-item">
                     <a class="nav-link" href="/">SyncPad</a>
                 </li>
                 <li class="nav-item">
@@ -38,6 +38,10 @@
 
     <%- include(page) %>
     <script>
+        $(document).ready(function() {
+            $('li.active').removeClass('active');
+            $('a[href="' + location.pathname + '"]').closest('li').addClass('active'); 
+        });
         $('#qrcodetext').hover(() => {
             $('#qrcodeimg').fadeIn('fast');
         });

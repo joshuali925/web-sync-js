@@ -8,32 +8,35 @@ const path = require('path');
 const util = require('./util');
 
 const args = process.argv.slice(2);
-const port = args.length > 0 ? parseInt(args[0]) : 8888;
-const local_url = util.getURL(port);
+const port = args.length > 0 ? parseInt(args[0]) : 18888;
+const host = args.length > 1 ? parseInt(args[1]) : '127.0.0.1';
+const local_url = util.getURL(host, port);
 
 let logged_in = false;
 let curr_text = ''
 util.createQR(local_url);
 
 app.set("view engine", "ejs");
+app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'static')));
 app.use(fileUpload());
 
-http.listen(port, function () {
-    console.log(local_url);
+http.listen(port, host, function () {
+    console.log(`[${new Date().toISOString()}] server running on ${local_url}`);
     opn(`http://localhost:${port}/`);
 });
 
 app.get('/', function (req, res) {
     // if (logged_in)
     res.render('index', {
-        page: './partials/syncpad'
+        page: path.join(__dirname, 'views', 'partials', 'syncpad')
     });
     // else
     //     res.render('login');
 });
 
 app.get('/api/get_text', (req, res) => {
+    console.log(`[${new Date().toISOString()}] ${req.headers['x-forwarded-for'] || req.socket.remoteAddress} /api/get_text`)
     res.send(curr_text.split('\n').join('<br>'));
 });
 
@@ -46,27 +49,28 @@ app.get('/login', (req, res) => {
 
 app.get('/upload', (req, res) => {
     res.render('index', {
-        page: './partials/upload'
+        page: path.join(__dirname, 'views', 'partials', 'upload')
     });
 });
 
 app.post('/upload', function (req, res) {
-    let files = req.files.file;
-    if (files.length) { // if multiple files uploaded
-        files.forEach((file, i) => util.saveFile(file));
-    } else {
-        util.saveFile(files);
+    if (req.files) {
+        let files = req.files.file;
+        if (files.length) { // if multiple files uploaded
+            files.forEach((file, i) => util.saveFile(file));
+        } else {
+            util.saveFile(files);
+        }
     }
     res.redirect('/upload');
 });
 
 io.on('connection', (socket) => {
-    console.log('a client connected');
+    console.log(`[${new Date().toISOString()}] ${socket.handshake.headers['x-forwarded-for'] || socket.conn.remoteAddress} connected`);
     socket.emit('update textarea', curr_text);
     socket.on('sync text', (text) => {
-        console.log('> ' + text);
         curr_text = text;
-        io.emit('update textarea', text);
+        socket.broadcast.emit('update textarea', text);
     })
 
     socket.on('generate qr', () => {
