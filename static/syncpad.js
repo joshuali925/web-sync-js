@@ -32,6 +32,8 @@ const generate_qr = () => {
 };
 
 let clear_all = () => {
+  console.log("clearing text:");
+  console.log($("#textarea").val());
   $("#textarea").val("");
   socket.emit("sync text", "");
   show_alert("Cleared!");
@@ -49,6 +51,10 @@ $(document).ready(function () {
 
   socket.on("update textarea", function (text) {
     // console.log('update received ' + text);
+    if (text.length === 0) {
+      console.log("clearing text:");
+      console.log($("#textarea").val());
+    }
     $("#textarea").val(text);
   });
 
