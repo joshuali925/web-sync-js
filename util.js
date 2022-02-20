@@ -26,10 +26,21 @@ function getIPAddress() {
   }
 }
 
+function getHostPort(arg) {
+  const host = "127.0.0.1";
+  const port = 18888;
+  if (arg == null) return { host, port };
+  const splitted = arg.split(":");
+  if (splitted.length === 2)
+    return { host: splitted[0], port: parseInt(splitted[1]) };
+  if (splitted[0] === "localhost" || splitted[0].includes("."))
+    return { host: splitted[0], port };
+  return { host, port: parseInt(splitted[0]) };
+}
+
 function getURL(host, port) {
-  if (host === "127.0.0.1") return `http://${host}:${port}/`;
-  const ip = getIPAddress();
-  return `http://${ip}:${port}/`;
+  if (host === "0.0.0.0") return `http://${getIPAddress()}:${port}/`;
+  return `http://${host}:${port}/`;
 }
 
 function createQR(url) {
@@ -66,7 +77,7 @@ function saveFile(file, fileName = undefined) {
 
 function clearTemp() {
   if (fs.existsSync(tempQrPath)) {
-    fs.readdirSync(tempQrPath).forEach((file, index) => {
+    fs.readdirSync(tempQrPath).forEach((file) => {
       const curPath = `${tempQrPath}/${file}`;
       if (fs.lstatSync(curPath).isDirectory()) {
         // recurse
@@ -80,4 +91,11 @@ function clearTemp() {
   }
 }
 
-module.exports = { getURL, createQR, createTextQR, saveFile, clearTemp };
+module.exports = {
+  getURL,
+  createQR,
+  createTextQR,
+  saveFile,
+  clearTemp,
+  getHostPort,
+};

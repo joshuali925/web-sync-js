@@ -6,13 +6,13 @@ const io = require("socket.io")(http);
 const opn = require("opn");
 const path = require("path");
 const util = require("./util");
+const termQR = require("qrcode-terminal");
 
 const args = process.argv.slice(2);
-const port = args.length > 0 ? parseInt(args[0]) : 18888;
-const host = args.length > 1 ? parseInt(args[1]) : "127.0.0.1";
+const { host, port } = util.getHostPort(args?.[0]);
 const local_url = util.getURL(host, port);
 
-let logged_in = false;
+// let logged_in = false;
 let curr_text = "";
 util.createQR(local_url);
 
@@ -24,6 +24,7 @@ app.use(fileUpload());
 http.listen(port, host, function () {
   console.log(`[${new Date().toISOString()}] server running on ${local_url}`);
   opn(`http://localhost:${port}/`);
+  if (host === "0.0.0.0") termQR.generate(local_url);
 });
 
 app.get("/", function (req, res) {
@@ -61,7 +62,7 @@ app.post("/upload", function (req, res) {
     let files = req.files.file;
     if (files.length) {
       // if multiple files uploaded
-      files.forEach((file, i) => util.saveFile(file));
+      files.forEach((file) => util.saveFile(file));
     } else {
       util.saveFile(files);
     }
