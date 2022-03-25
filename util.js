@@ -5,15 +5,15 @@ const qrPath = path.join(__dirname, "static", "images");
 const tempQrPath = qrPath + "/temp";
 
 function getIPAddress() {
-  let interfaces = require("os").networkInterfaces();
+  const interfaces = require("os").networkInterfaces();
   try {
     // assume on wifi
     return interfaces.wifi0[0].address;
   } catch (e) {
-    for (let devName in interfaces) {
-      let iface = interfaces[devName];
+    for (const devName in interfaces) {
+      const iface = interfaces[devName];
       for (let i = 0; i < iface.length; i++) {
-        let alias = iface[i];
+        const alias = iface[i];
         if (
           alias.family === "IPv4" &&
           alias.address !== "127.0.0.1" &&

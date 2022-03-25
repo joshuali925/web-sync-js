@@ -1,21 +1,21 @@
-let socket = io();
+const socket = io();
 
-function debounce(fn, ms) {
+function debounce(fn, ms, immediate) {
   let timer = 0;
   return function (...args) {
+    if (immediate) immediate();
     clearTimeout(timer);
     timer = setTimeout(fn.bind(this, ...args), ms || 0);
   };
 }
 
-let copy_all = function () {
-  let elementId = "textarea";
-  let input = document.getElementById(elementId);
+const copy_all = function () {
+  const input = document.getElementById("textarea");
   if (navigator.userAgent.match(/ipad|iphone/i)) {
     // for iOS
-    let range = document.createRange();
+    const range = document.createRange();
     range.selectNodeContents(input);
-    let selection = window.getSelection();
+    const selection = window.getSelection();
     selection.removeAllRanges();
     selection.addRange(range);
     input.setSelectionRange(0, 999999);
@@ -31,7 +31,7 @@ const generate_qr = () => {
   socket.emit("generate qr");
 };
 
-let clear_all = () => {
+const clear_all = () => {
   console.log("clearing text:");
   console.log($("#textarea").val());
   $("#textarea").val("");
@@ -60,18 +60,29 @@ $(document).ready(function () {
 
   socket.on("qr ready", (length) => {
     $(".modal-body").empty();
-    for (var i = length - 1; i >= 0; i--) {
+    for (let i = length - 1; i >= 0; i--) {
       $(".modal-body").prepend(
         `<img id="qrcode-img-${i}" src="images/temp/temp_qr${i}.png?${new Date().getTime()}" width="500" height="500" />`
       );
     }
   });
 
+  const syncPadNadText = $("#syncpad-nav").text();
+  let prevText = "";
   $("#textarea").on(
     "change keyup keypress touchend",
-    debounce(function () {
-      let text = $("#textarea").val();
-      socket.emit("sync text", text);
-    }, 500)
+    debounce(
+      () => {
+        const text = $("#textarea").val();
+        prevText = text;
+        socket.emit("sync text", text);
+        $("#syncpad-nav").text(syncPadNadText);
+      },
+      500,
+      () => {
+        if ($("#textarea").val() !== prevText)
+          $("#syncpad-nav").text(syncPadNadText + "*");
+      }
+    )
   );
 });

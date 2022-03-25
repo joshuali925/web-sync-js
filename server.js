@@ -59,7 +59,7 @@ app.get("/upload", (req, res) => {
 
 app.post("/upload", function (req, res) {
   if (req.files) {
-    let files = req.files.file;
+    const files = req.files.file;
     if (files.length) {
       // if multiple files uploaded
       files.forEach((file) => util.saveFile(file));
