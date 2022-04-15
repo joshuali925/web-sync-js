@@ -35,7 +35,7 @@ const clear_all = () => {
   console.log($("#textarea").val());
   $("#textarea").val("");
   socket.emit("sync text", "", focus_index);
-  text_list[focus_index] = "";
+  update_text_list("", focus_index);
   show_alert("Cleared!");
 };
 
@@ -50,11 +50,33 @@ function switch_focus(index) {
   return () => {
     focus_index = index;
     $("#textarea").val(text_list[index]);
-  }
+  };
 }
 
 let text_list = ["", "", ""];
 let focus_index = 0;
+
+function change_toggle_styles(index, is_empty) {
+  if (is_empty) {
+    $("#label" + index).removeClass("btn-outline-primary");
+    $("#label" + index).addClass("btn-outline-secondary");
+    $("#label" + index).removeClass("font-weight-bold");
+  } else {
+    $("#label" + index).removeClass("btn-outline-secondary");
+    $("#label" + index).addClass("btn-outline-primary");
+    $("#label" + index).addClass("font-weight-bold");
+  }
+}
+
+function update_text_list(text, index) {
+  if (index == null) {
+    text_list = text;
+    text.forEach((t, i) => change_toggle_styles(i + 1, t.length === 0));
+  } else {
+    text_list[index] = text;
+    change_toggle_styles(index + 1, text.length === 0);
+  }
+}
 
 $(document).ready(function () {
   $("#textarea").focus();
@@ -69,12 +91,12 @@ $(document).ready(function () {
       console.log(`clearing for textarea ${index}:`);
       console.log($("#textarea").val());
     }
-    text_list[index] = text;
+    update_text_list(text, index);
     if (focus_index === index) $("#textarea").val(text);
   });
 
   socket.on("update all textarea", function (texts) {
-    text_list = texts;
+    update_text_list(texts);
     $("#textarea").val(texts[focus_index]);
   });
 
@@ -91,9 +113,8 @@ $(document).ready(function () {
 
   const debounced_sync = debounce(() => {
     const text = $("#textarea").val();
-    console.log("❗text:", text);
-    text_list[focus_index] = text;
     socket.emit("sync text", text, focus_index);
+    update_text_list(text, focus_index);
     $("#syncpad-nav").text(sync_pad_nav_text);
   }, 500);
 
