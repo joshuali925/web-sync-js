@@ -1,9 +1,8 @@
 const socket = io();
 
-function debounce(fn, ms, immediate) {
+function debounce(fn, ms) {
   let timer = 0;
   return function (...args) {
-    if (immediate) immediate();
     clearTimeout(timer);
     timer = setTimeout(fn.bind(this, ...args), ms || 0);
   };
@@ -69,20 +68,19 @@ $(document).ready(function () {
 
   const syncPadNadText = $("#syncpad-nav").text();
   let prevText = "";
-  $("#textarea").on(
-    "change keyup keypress touchend",
-    debounce(
-      () => {
-        const text = $("#textarea").val();
-        prevText = text;
-        socket.emit("sync text", text);
-        $("#syncpad-nav").text(syncPadNadText);
-      },
-      500,
-      () => {
-        if ($("#textarea").val() !== prevText)
-          $("#syncpad-nav").text(syncPadNadText + "*");
-      }
-    )
-  );
+
+  const debouncedSync = debounce(() => {
+    const text = $("#textarea").val();
+    console.log("❗text:", text);
+    prevText = text;
+    socket.emit("sync text", text);
+    $("#syncpad-nav").text(syncPadNadText);
+  }, 500);
+
+  $("#textarea").on("change keyup keypress touchend paste", () => {
+    if ($("#textarea").val() !== prevText) {
+      $("#syncpad-nav").text(syncPadNadText + "*");
+      debouncedSync();
+    }
+  });
 });
