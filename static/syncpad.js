@@ -34,7 +34,8 @@ const clear_all = () => {
   console.log("clearing text:");
   console.log($("#textarea").val());
   $("#textarea").val("");
-  socket.emit("sync text", "");
+  socket.emit("sync text", "", focus_index);
+  text_list[focus_index] = "";
   show_alert("Cleared!");
 };
 
@@ -45,16 +46,36 @@ function show_alert(message) {
   }, 1000);
 }
 
+function switch_focus(index) {
+  return () => {
+    focus_index = index;
+    $("#textarea").val(text_list[index]);
+  }
+}
+
+let text_list = ["", "", ""];
+let focus_index = 0;
+
 $(document).ready(function () {
   $("#textarea").focus();
 
-  socket.on("update textarea", function (text) {
+  $("#focus1").on("change", switch_focus(0));
+  $("#focus2").on("change", switch_focus(1));
+  $("#focus3").on("change", switch_focus(2));
+
+  socket.on("update textarea", function (text, index) {
     // console.log('update received ' + text);
     if (text.length === 0) {
-      console.log("clearing text:");
+      console.log(`clearing for textarea ${index}:`);
       console.log($("#textarea").val());
     }
-    $("#textarea").val(text);
+    text_list[index] = text;
+    if (focus_index === index) $("#textarea").val(text);
+  });
+
+  socket.on("update all textarea", function (texts) {
+    text_list = texts;
+    $("#textarea").val(texts[focus_index]);
   });
 
   socket.on("qr ready", (length) => {
@@ -66,21 +87,20 @@ $(document).ready(function () {
     }
   });
 
-  const syncPadNadText = $("#syncpad-nav").text();
-  let prevText = "";
+  const sync_pad_nav_text = $("#syncpad-nav").text();
 
-  const debouncedSync = debounce(() => {
+  const debounced_sync = debounce(() => {
     const text = $("#textarea").val();
     console.log("❗text:", text);
-    prevText = text;
-    socket.emit("sync text", text);
-    $("#syncpad-nav").text(syncPadNadText);
+    text_list[focus_index] = text;
+    socket.emit("sync text", text, focus_index);
+    $("#syncpad-nav").text(sync_pad_nav_text);
   }, 500);
 
   $("#textarea").on("change keyup keypress touchend paste", () => {
-    if ($("#textarea").val() !== prevText) {
-      $("#syncpad-nav").text(syncPadNadText + "*");
-      debouncedSync();
+    if ($("#textarea").val() !== text_list[focus_index]) {
+      $("#syncpad-nav").text(sync_pad_nav_text + "*");
+      debounced_sync();
     }
   });
 });

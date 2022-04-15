@@ -13,7 +13,7 @@ const { host, port } = util.getHostPort(args?.[0]);
 const local_url = util.getURL(host, port);
 
 // let logged_in = false;
-let curr_text = "";
+let text_list = ["", "", ""];
 util.createQR(local_url);
 
 app.set("view engine", "ejs");
@@ -42,7 +42,7 @@ app.get("/api/get_text", (req, res) => {
       req.headers["x-forwarded-for"] || req.socket.remoteAddress
     } /api/get_text`
   );
-  res.send(curr_text.split("\n").join("<br>"));
+  res.send(text_list[0].split("\n").join("<br>"));
 });
 
 app.get("/login", (req, res) => {
@@ -76,18 +76,18 @@ io.on("connection", (socket) => {
       socket.handshake.headers["x-forwarded-for"] || socket.conn.remoteAddress
     } connected`
   );
-  socket.emit("update textarea", curr_text);
-  socket.on("sync text", (text) => {
-    curr_text = text;
-    socket.broadcast.emit("update textarea", text);
+  socket.emit("update all textarea", text_list);
+  socket.on("sync text", (text, index) => {
+    text_list[index] = text;
+    socket.broadcast.emit("update textarea", text, index);
   });
 
-  socket.on("generate qr", () => {
+  socket.on("generate qr", (index) => {
     const chunks = [],
       len = 777;
     let i = 0;
-    while (i < curr_text.length) {
-      chunks.push(curr_text.substring(i, i + len));
+    while (i < text_list[index].length) {
+      chunks.push(text_list[index].substring(i, i + len));
       i += len;
     }
 

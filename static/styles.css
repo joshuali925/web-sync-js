@@ -4,3 +4,19 @@
   position: absolute;
   z-index: 1000;
 }
+
+.flex-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-group-toggle {
+  margin-left: auto;
+}
+
+.flex-container::before {
+  content: "";
+  margin-right: 102.172px; /* width of .btn-group-toggle */
+  margin-left: auto;
+}
