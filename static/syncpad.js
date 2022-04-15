@@ -27,7 +27,7 @@ const copy_all = function () {
 };
 
 const generate_qr = () => {
-  socket.emit("generate qr");
+  socket.emit("generate qr", focus_index);
 };
 
 const clear_all = () => {
