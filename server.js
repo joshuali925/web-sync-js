@@ -3,7 +3,7 @@ const fileUpload = require("express-fileupload");
 const app = express();
 const http = require("http").Server(app);
 const io = require("socket.io")(http);
-const opn = require("opn");
+const open = require("open");
 const path = require("path");
 const util = require("./util");
 const termQR = require("qrcode-terminal");
@@ -23,7 +23,7 @@ app.use(fileUpload());
 
 http.listen(port, host, function () {
   console.log(`[${new Date().toISOString()}] server running on ${local_url}`);
-  opn(`http://localhost:${port}/`);
+  open(`http://localhost:${port}/`);
   if (host === "0.0.0.0") termQR.generate(local_url);
 });
 
