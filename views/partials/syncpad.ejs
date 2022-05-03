@@ -5,13 +5,24 @@
   </div>
   <div class="alert alert-success" role="alert" id="alert" style="display: none; position: absolute; z-index: 1000;"></div>
   <div class="flex-container">
+    <div class="btn-group flex-wrap btn-group-toggle" id="invisible" data-toggle="buttons">
+      <label class="btn btn-outline-secondary">
+        <input type="radio" name="options"> 1
+      </label>
+      <label class="btn btn-outline-secondary">
+        <input type="radio" name="options"> 2
+      </label>
+      <label class="btn btn-outline-secondary">
+        <input type="radio" name="options"> 3
+      </label>
+    </div>
     <button type="button" onclick="copy_all()" id="copybutton" class="btn btn-success"><i
       class="fa fa-clipboard"></i> Copy</button>
     <button type="button" onclick="generate_qr()" class="btn btn-success" data-toggle="modal" data-target="#exampleModalCenter">
       <i class="fa fa-qrcode"></i> QR Code</button>
     <button type="button" onclick="clear_all()" id="clearbutton" class="btn btn-danger"><i
       class="fa fa-trash-o"></i> Clear</button>
-    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+    <div class="btn-group flex-wrap btn-group-toggle" id="button-group" data-toggle="buttons">
       <label class="btn btn-outline-secondary active" id="label1">
         <input type="radio" name="options" id="focus1" checked> 1
       </label>

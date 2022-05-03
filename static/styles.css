@@ -16,12 +16,17 @@
   margin-right: 2px;
 }
 
-.btn-group-toggle {
+#button-group {
   margin-left: auto;
 }
 
-.flex-container::before {
+/* .flex-container::before {
   content: "";
-  margin-right: 102.172px; /* width of .btn-group-toggle */
+  margin-right: 102.172px; /* width of .btn-group-toggle
   margin-left: auto;
+} */
+
+#invisible {
+  margin-right: auto;
+  visibility: hidden;
 }
