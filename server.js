@@ -23,7 +23,7 @@ app.use(fileUpload());
 
 http.listen(port, host, function () {
   console.log(`[${new Date().toISOString()}] server running on ${local_url}`);
-  open(`http://localhost:${port}/`);
+  // open(`http://localhost:${port}/`);
   if (host === "0.0.0.0") termQR.generate(local_url);
 });
 
@@ -36,13 +36,36 @@ app.get("/", function (req, res) {
   //     res.render('login');
 });
 
-app.get("/api/get_text", (req, res) => {
+const id_to_index = (id) => {
+  if (!id || id < 1 || id > 3) id = 1;
+  return id - 1;
+};
+
+app.get("/api/get/:id?", function (req, res) {
   console.log(
     `[${new Date().toISOString()}] ${
       req.headers["x-forwarded-for"] || req.socket.remoteAddress
-    } /api/get_text`
+    } /api/get/${req.params.id}`
   );
-  res.send(text_list[0].split("\n").join("<br>"));
+  res.send(text_list[id_to_index(req.params.id)].split("\n").join("<br>"));
+});
+
+app.get("/api/get_text", function (req, res) {
+  res.redirect("/api/get/1");
+});
+
+const append_api_regex = /^\/api\/append\/(\d+)\/(.+)$/;
+app.get(append_api_regex, function (req, res) {
+  const [_, id, text] = req.url.match(append_api_regex);
+  console.log(
+    `[${new Date().toISOString()}] ${
+      req.headers["x-forwarded-for"] || req.socket.remoteAddress
+    } /api/append/${id}`
+  );
+  const index = id_to_index(id);
+  text_list[index] += "\n" + text;
+  io.emit("update textarea", text_list[index], index);
+  res.send(text_list[index].split("\n").join("<br>"));
 });
 
 app.get("/login", (req, res) => {
