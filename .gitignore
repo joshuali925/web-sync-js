@@ -1,4 +1,4 @@
 node_modules
 .vscode
-/upload-temp/
-static/images/*
+/data/
+/static/images/

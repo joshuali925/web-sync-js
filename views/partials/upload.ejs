@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <div class="container-fluid">
-    <form action='/upload' method='post' encType="multipart/form-data">
-        <div class="input-group">
-            <div class="custom-file">
-                <input type="file" name="file" class="custom-file-input" id="fileinput" multiple>
-                <label class="custom-file-label" for="fileinput">Choose file</label>
-            </div>
-            <div class="input-group-append">
-                <button class="btn btn-success"><i class="fa fa-fw fa-upload"></i> Upload</button>
-            </div>
-        </div>
-    </form>
-    <ul class="list-group list-group-flush" id="filelist">
-    </ul>
+  <form action='/upload' method='post' encType="multipart/form-data">
+    <div class="input-group">
+      <div class="custom-file">
+        <input type="file" name="file" class="custom-file-input" id="fileinput" multiple>
+        <label class="custom-file-label" for="fileinput">Choose file</label>
+      </div>
+      <div class="input-group-append">
+        <button class="btn btn-success"><i class="fa fa-fw fa-upload"></i> Upload</button>
+      </div>
+    </div>
+  </form>
+  <ul class="list-group list-group-flush" id="filelist">
+  </ul>
 </div>
 
 <script>
-    $('#fileinput').on('change', function () {
-        let files = document.getElementById('fileinput').files;
-        $(this).next('.custom-file-label').html(`${files.length} files selected`);
-        for (const file of files) {
-            $('#filelist').append(`<li class="list-group-item">${file.name}</li>`);
-        }
-    })
+  $('#fileinput').on('change', function () {
+    let files = document.getElementById('fileinput').files;
+    $(this).next('.custom-file-label').html(`${files.length} files selected`);
+    for (const file of files) {
+      $('#filelist').append(`<li class="list-group-item">${file.name}</li>`);
+    }
+  })
 </script>

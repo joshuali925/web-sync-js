@@ -1,5 +1,8 @@
 const socket = io();
 
+let textList = ["", "", ""];
+let focusIndex = 0;
+
 function debounce(fn, ms) {
   let timer = 0;
   return function (...args) {
@@ -8,7 +11,7 @@ function debounce(fn, ms) {
   };
 }
 
-const copy_all = function () {
+function copyAll() {
   const input = document.getElementById("textarea");
   if (navigator.userAgent.match(/ipad|iphone/i)) {
     // for iOS
@@ -23,41 +26,38 @@ const copy_all = function () {
   }
   document.execCommand("copy");
   $("#copybutton").focus();
-  show_alert("All copied!");
-};
+  showAlert("All copied!");
+}
 
-const generate_qr = () => {
-  socket.emit("generate qr", focus_index);
-};
+function generateQR() {
+  socket.emit("generate qr", focusIndex);
+}
 
-const clear_all = () => {
+function clearAll() {
   console.log("clearing text:");
   console.log($("#textarea").val());
   $("#textarea").val("");
-  socket.emit("sync text", "", focus_index);
-  update_text_list("", focus_index);
-  show_alert("Cleared!");
-};
+  socket.emit("sync text", "", focusIndex);
+  updateTextList("", focusIndex);
+  showAlert("Cleared!");
+}
 
-function show_alert(message) {
+function showAlert(message) {
   $("#alert").html(message).slideDown(200);
   setTimeout(() => {
     $("#alert").slideUp(200);
   }, 1000);
 }
 
-function switch_focus(index) {
+function switchFocus(index) {
   return () => {
-    focus_index = index;
-    $("#textarea").val(text_list[index]);
+    focusIndex = index;
+    $("#textarea").val(textList[index]);
   };
 }
 
-let text_list = ["", "", ""];
-let focus_index = 0;
-
-function change_toggle_styles(index, is_empty) {
-  if (is_empty) {
+function changeToggleStyles(index, isEmpty) {
+  if (isEmpty) {
     $("#label" + index).removeClass("btn-outline-primary");
     $("#label" + index).addClass("btn-outline-secondary");
     $("#label" + index).removeClass("font-weight-bold");
@@ -68,22 +68,22 @@ function change_toggle_styles(index, is_empty) {
   }
 }
 
-function update_text_list(text, index) {
+function updateTextList(text, index) {
   if (index == null) {
-    text_list = text;
-    text.forEach((t, i) => change_toggle_styles(i + 1, t.length === 0));
+    textList = text;
+    text.forEach((t, i) => changeToggleStyles(i + 1, t.length === 0));
   } else {
-    text_list[index] = text;
-    change_toggle_styles(index + 1, text.length === 0);
+    textList[index] = text;
+    changeToggleStyles(index + 1, text.length === 0);
   }
 }
 
 $(document).ready(function () {
   $("#textarea").focus();
 
-  $("#focus1").on("change", switch_focus(0));
-  $("#focus2").on("change", switch_focus(1));
-  $("#focus3").on("change", switch_focus(2));
+  $("#focus1").on("change", switchFocus(0));
+  $("#focus2").on("change", switchFocus(1));
+  $("#focus3").on("change", switchFocus(2));
 
   socket.on("update textarea", function (text, index) {
     // console.log('update received ' + text);
@@ -91,13 +91,13 @@ $(document).ready(function () {
       console.log(`clearing for textarea ${index}:`);
       console.log($("#textarea").val());
     }
-    update_text_list(text, index);
-    if (focus_index === index) $("#textarea").val(text);
+    updateTextList(text, index);
+    if (focusIndex === index) $("#textarea").val(text);
   });
 
   socket.on("update all textarea", function (texts) {
-    update_text_list(texts);
-    $("#textarea").val(texts[focus_index]);
+    updateTextList(texts);
+    $("#textarea").val(texts[focusIndex]);
   });
 
   socket.on("qr ready", (length) => {
@@ -109,19 +109,19 @@ $(document).ready(function () {
     }
   });
 
-  const sync_pad_nav_text = $("#syncpad-nav").text();
+  const syncpadNavText = $("#syncpad-nav").text();
 
-  const debounced_sync = debounce(() => {
+  const debouncedSync = debounce(() => {
     const text = $("#textarea").val();
-    socket.emit("sync text", text, focus_index);
-    update_text_list(text, focus_index);
-    $("#syncpad-nav").text(sync_pad_nav_text);
+    socket.emit("sync text", text, focusIndex);
+    updateTextList(text, focusIndex);
+    $("#syncpad-nav").text(syncpadNavText);
   }, 500);
 
   $("#textarea").on("change keyup keypress touchend paste", () => {
-    if ($("#textarea").val() !== text_list[focus_index]) {
-      $("#syncpad-nav").text(sync_pad_nav_text + "*");
-      debounced_sync();
+    if ($("#textarea").val() !== textList[focusIndex]) {
+      $("#syncpad-nav").text(syncpadNavText + "*");
+      debouncedSync();
     }
   });
 });
