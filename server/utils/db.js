@@ -18,7 +18,7 @@ db.run(`CREATE TABLE IF NOT EXISTS shortened (
     value TEXT NOT NULL,
     description TEXT,
     isURL INTEGER DEFAULT 0,
-    isVisible INTEGER DEFAULT 1,
+    isPublic INTEGER DEFAULT 1,
     hits INTEGER DEFAULT 0)`);
 
 async function generateKey() {
@@ -32,12 +32,12 @@ async function generateKey() {
   throw Error("Could not generate a unique key.");
 }
 
-function insert(key, value, description, isURL = false, isVisible = true) {
+function insert(key, value, description, isURL = false, isPublic = true) {
   return promiseWrapper(async (resultHandler) => {
     if (!key) key = await generateKey();
     return db.run(
-      "INSERT OR REPLACE INTO shortened (key, value, description, isURL, isVisible) VALUES (?, ?, ?, ?, ?)",
-      [key, value, description, isURL, isVisible],
+      "INSERT OR REPLACE INTO shortened (key, value, description, isURL, isPublic) VALUES (?, ?, ?, ?, ?)",
+      [key, value, description, isURL, isPublic],
       resultHandler
     );
   })
@@ -82,10 +82,10 @@ function incrementCounter(key) {
   );
 }
 
-function getVisibles() {
+function getPublics() {
   return promiseWrapper((resultHandler) =>
     db.all(
-      "select key, dateCreated, value, description, isURL, hits from shortened where isVisible = 1 order by dateCreated desc",
+      "select key, dateCreated, value, description, isURL, hits from shortened where isPublic = 1 order by dateCreated desc",
       undefined,
       resultHandler
     )
@@ -123,7 +123,7 @@ module.exports = {
   each,
   get,
   getByKey,
-  getVisibles,
+  getPublics,
   incrementCounter,
   insert,
 };

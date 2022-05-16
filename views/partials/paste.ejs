@@ -4,38 +4,6 @@
   <small class="text-muted" id="date-heading">&nbsp;</small>
   <textarea class="form-control mt-2" readonly style="height: 70vh"></textarea>
 </div>
-<div class="modal" role="dialog" id="deleteSavedModal">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Delete</h5>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p id="modal-confirm-message"></p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-          Cancel
-        </button>
-        <button
-          type="button"
-          class="btn btn-danger"
-          onclick="deleteSaved(event)"
-        >
-          Delete
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
 <script>
   $(document).ready(function () {
     fetch(
@@ -56,10 +24,6 @@
           date.local().format("YYYY-MM-DD HH:mm:ss")
         );
       });
-    $("#deleteSavedModal").on("show.bs.modal", function (event) {
-      const key = $(event.relatedTarget).data("key");
-      $("#modal-confirm-message").text(`Are you sure to delete /${key}?`);
-    });
   });
 </script>
 

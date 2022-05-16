@@ -101,20 +101,22 @@ $(document).ready(function () {
 
   $("#form-save-button").click(function (e) {
     e.preventDefault();
+    const key = $("#form-key-input").val().trim();
     fetch("/api/save", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         id: focusIndex,
-        key: $("#form-key-input").val().trim(),
-        description: $("#form-description-input").val(),
-        isVisible: document.getElementById("form-isVisible").checked,
+        key,
+        description: $("#form-description-input").val().trim() || key,
+        isPublic: document.getElementById("form-isPublic").checked,
       }),
     })
       .then((resp) => resp.json())
       .then((json) => {
         $("#saveModalContainer").modal("hide");
         $("#form-key-input").val("");
+        $("#form-description-input").val("");
         if (json.error) {
           console.error(json);
           showAlert(`Error: ${JSON.stringify(json.error)}`, 3000, "danger");

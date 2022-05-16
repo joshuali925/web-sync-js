@@ -42,13 +42,13 @@ router.post("/save", async function (req, res) {
   const value = req.textList[index];
   const description = req.body.description;
   const isURL = utils.validURL(value);
-  const isVisible = req.body.isVisible;
-  const resp = await db.insert(key, value, description, isURL, isVisible);
+  const isPublic = req.body.isPublic;
+  const resp = await db.insert(key, value, description, isURL, isPublic);
   res.send(resp);
 });
 
 router.get("/save", async function (req, res) {
-  const resp = await db.getVisibles();
+  const resp = await db.getPublics();
   for (let i = 0; i < resp.length; i++) {
     const item = resp[i];
     if (!item.isURL && item.value.length > 30) {

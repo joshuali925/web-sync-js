@@ -42,10 +42,8 @@ function addRow({ key, dateCreated, value, description, isURL, hits }) {
 
   const actionAnchor = document.createElement("a");
   actionAnchor.classList.add("text-danger");
-  actionAnchor.setAttribute("data-toggle", "modal");
-  actionAnchor.setAttribute("data-target", "#deleteSavedModal");
-  actionAnchor.setAttribute("data-key", key);
   actionAnchor.innerHTML = `<i class="fa fa-trash-o"></i>`;
+  actionAnchor.onclick = () => deleteSaved(key);
   row.insertCell().appendChild(actionAnchor);
 }
 
@@ -55,10 +53,8 @@ function copyURL(path) {
   showAlert(`Copied ${url}!`);
 }
 
-function deleteSaved() {
-  const key = $("#modal-confirm-message").text().slice(24, -1);
+function deleteSaved(key) {
   fetch("/api/save/" + key, { method: "delete" }).then(() => {
-    $("#deleteSavedModal").modal("hide");
     refresh();
     showAlert(`Item deleted!`);
   });
@@ -76,8 +72,4 @@ function refresh() {
 
 $(document).ready(function () {
   refresh();
-  $("#deleteSavedModal").on("show.bs.modal", function (event) {
-    const key = $(event.relatedTarget).data("key");
-    $("#modal-confirm-message").text(`Are you sure to delete /${key}?`);
-  });
 });
