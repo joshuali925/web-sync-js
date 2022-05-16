@@ -14,8 +14,8 @@ function addRow({ key, dateCreated, value, isURL, hits }) {
 
   const urlElement = document.createElement("span");
   urlElement.innerHTML = `
-    <a class="text-success" onclick="copyURL('/s/${key}')" href="#"><i class="fa fa-clipboard"></i></a>
-    &nbsp;<a href="/s/${key}">/s/${key}</a>
+    <a class="text-success" onclick="copyURL('${key}')" href="#"><i class="fa fa-clipboard"></i></a>
+    &nbsp;<a href="/s/${key}">/${key}</a>
   `;
   row.insertCell().appendChild(urlElement);
   row.insertCell().appendChild(document.createTextNode(hits));
@@ -27,8 +27,9 @@ function addRow({ key, dateCreated, value, isURL, hits }) {
 }
 
 function copyURL(path) {
-  copy(window.location.host + path);
-  showAlert(`Copied ${window.location.host + path}!`);
+  const url = baseURL() + 's/' + path;
+  copy(url);
+  showAlert(`Copied ${url}!`);
 }
 
 function deleteSaved() {
@@ -53,6 +54,6 @@ $(document).ready(function () {
   refresh();
   $("#deleteSavedModal").on("show.bs.modal", function (event) {
     const key = $(event.relatedTarget).data("key");
-    $(this).find(".modal-body p").text(`Are you sure to delete /s/${key}?`);
+    $(this).find(".modal-body p").text(`Are you sure to delete /${key}?`);
   });
 });

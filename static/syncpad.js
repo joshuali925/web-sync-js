@@ -119,7 +119,8 @@ $(document).ready(function () {
           console.error(json);
           showAlert(`Error: ${JSON.stringify(json.error)}`, 3000, "danger");
         } else {
-          showAlert(`Saved to /s/${json.key}`, 3000);
+          copy(baseURL() + json.key)
+          showAlert(`Saved to /${json.key}, copied to clipboard`, 3000);
         }
       });
   });

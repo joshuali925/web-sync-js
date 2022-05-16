@@ -27,10 +27,10 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/", require("./routes/syncpad"));
 app.use("/upload", require("./routes/upload"));
 app.use("/s", require("./routes/saved"));
 app.use("/api", require("./routes/api"));
+app.use("/", require("./routes/syncpad")); // keep at bottom for fallback
 
 io.on("connection", (socket) => {
   console.log(

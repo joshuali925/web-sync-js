@@ -15,9 +15,13 @@ function showAlert(message, lifeTime = 1000, status = "success") {
   }, lifeTime);
 }
 
+function baseURL() {
+  return window.location.protocol + "//" + window.location.host + "/";
+}
+
 function copy(target) {
   let shouldRemoveElement = false;
-  if (typeof target === 'string') {
+  if (typeof target === "string") {
     const text = target;
     target = document.createElement("textarea");
     target.value = text;
