@@ -11,7 +11,11 @@ router.get("/", (req, res) => {
 router.get("/:key", (req, res) => {
   db.getByKey(req.params.key)
     .then((resp) => {
-      res.redirect(resp.value);
+      if (resp.isURL) res.redirect(resp.value);
+      else
+        res.render("index", {
+          page: `${ROOT}/views/partials/paste`,
+        });
       db.incrementCounter(req.params.key);
     })
     .catch((error) => {

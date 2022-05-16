@@ -65,7 +65,7 @@ function get(sql, params) {
 function getByKey(key) {
   return promiseWrapper((resultHandler) =>
     db.get(
-      "select value, isURL from shortened where key = ?",
+      "select dateCreated, value, description, isURL from shortened where key = ?",
       key,
       resultHandler
     )
@@ -115,18 +115,6 @@ function each(sql, params) {
 function close() {
   db.close();
 }
-
-/* db.serialize(function () {
-  insert("a", "hi", true, false);
-  insert("b", "hi");
-  // get("select * from shortened where key = 'a'").then((a) => console.log(a));
-  getByKey("b").then((a) => console.log(a));
-  each("select * from shortened where isVisible = 1").then((a) => {
-    console.log("❗a:", a);
-    return console.log(a);
-  });
-  all("select * from shortened").then((a) => console.log(a));
-}); */
 
 module.exports = {
   all,

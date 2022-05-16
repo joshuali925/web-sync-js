@@ -2,17 +2,23 @@ const table = document.getElementById("save-tbody");
 
 function addRow({ key, dateCreated, value, description, isURL, hits }) {
   const row = table.insertRow();
-  const targetURLElement = document.createElement("a");
-  targetURLElement.setAttribute("href", value);
-  targetURLElement.textContent = value;
-  const targetURLCell = row.insertCell();
-  targetURLCell.appendChild(targetURLElement);
+  const contentCell = row.insertCell();
+  let targetElement;
+  if (isURL) {
+    targetElement = document.createElement("a");
+    targetElement.setAttribute("href", value);
+    targetElement.textContent = value;
+  } else {
+    targetElement = document.createElement("div");
+    targetElement.textContent = value;
+  }
+  contentCell.appendChild(targetElement);
   if (description) {
     const descriptionElement = document.createElement("div");
     descriptionElement.textContent = description;
     descriptionElement.classList.add("small");
     descriptionElement.classList.add("text-muted");
-    targetURLCell.appendChild(descriptionElement);
+    contentCell.appendChild(descriptionElement);
   }
 
   const dateCell = row.insertCell();
@@ -51,7 +57,7 @@ function copyURL(path) {
 
 function deleteSaved() {
   const key = $("#modal-confirm-message").text().slice(24, -1);
-  fetch("./api/save/" + key, { method: "delete" }).then(() => {
+  fetch("/api/save/" + key, { method: "delete" }).then(() => {
     $("#deleteSavedModal").modal("hide");
     refresh();
     showAlert(`Item deleted!`);
@@ -59,7 +65,7 @@ function deleteSaved() {
 }
 
 function refresh() {
-  fetch("./api/save")
+  fetch("/api/save")
     .then((resp) => resp.json())
     .then((resp) => {
       table.innerHTML = "";

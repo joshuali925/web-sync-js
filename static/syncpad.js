@@ -101,14 +101,13 @@ $(document).ready(function () {
 
   $("#form-save-button").click(function (e) {
     e.preventDefault();
-    fetch("./api/save", {
+    fetch("/api/save", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         id: focusIndex,
-        key: $("#form-key-input").val(),
+        key: $("#form-key-input").val().trim(),
         description: $("#form-description-input").val(),
-        isURL: document.getElementById("form-isURL").checked,
         isVisible: document.getElementById("form-isVisible").checked,
       }),
     })
