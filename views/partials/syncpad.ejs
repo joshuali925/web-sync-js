@@ -7,12 +7,6 @@
       style="height: 70vh"
     ></textarea>
   </div>
-  <div
-    class="alert alert-success"
-    role="alert"
-    id="alert"
-    style="display: none; position: absolute; z-index: 1000"
-  ></div>
   <div class="flex-container">
     <!-- invisible elements to center the buttons START -->
     <div class="btn-group flex-wrap btn-group-toggle mr-auto invisible">
@@ -118,10 +112,21 @@
               class="form-control"
               id="form-key-input"
               autocomplete="off"
+              placeholder="optional"
             />
-            <small id="emailHelp" class="form-text text-muted">
+            <small class="form-text text-muted">
               Leave blank for a random path.
             </small>
+          </div>
+          <div class="form-group">
+            <label for="form-description-input">Description</label>
+            <input
+              type="text"
+              class="form-control"
+              id="form-description-input"
+              autocomplete="off"
+              placeholder="optional"
+            />
           </div>
           <div class="form-check">
             <input

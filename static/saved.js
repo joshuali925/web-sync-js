@@ -1,11 +1,19 @@
 const table = document.getElementById("save-tbody");
 
-function addRow({ key, dateCreated, value, isURL, hits }) {
+function addRow({ key, dateCreated, value, description, isURL, hits }) {
   const row = table.insertRow();
   const targetURLElement = document.createElement("a");
   targetURLElement.setAttribute("href", value);
   targetURLElement.textContent = value;
-  row.insertCell().appendChild(targetURLElement);
+  const targetURLCell = row.insertCell();
+  targetURLCell.appendChild(targetURLElement);
+  if (description) {
+    const descriptionElement = document.createElement("div");
+    descriptionElement.textContent = description;
+    descriptionElement.classList.add("small");
+    descriptionElement.classList.add("text-muted");
+    targetURLCell.appendChild(descriptionElement);
+  }
 
   const dateCell = row.insertCell();
   const date = moment.utc(dateCreated);
@@ -13,27 +21,36 @@ function addRow({ key, dateCreated, value, isURL, hits }) {
   dateCell.setAttribute("title", date.local().format("YYYY-MM-DD HH:mm:ss"));
 
   const urlElement = document.createElement("span");
-  urlElement.innerHTML = `
-    <a class="text-success" onclick="copyURL('${key}')" href="#"><i class="fa fa-clipboard"></i></a>
-    &nbsp;<a href="/s/${key}">/${key}</a>
-  `;
+  const copyAnchor = document.createElement("a");
+  copyAnchor.innerHTML = `<i class="fa fa-clipboard"></i>`;
+  copyAnchor.onclick = () => copyURL(key);
+  copyAnchor.classList.add("text-success");
+  const urlAnchor = document.createElement("a");
+  urlAnchor.href = `/s/${key}`;
+  urlAnchor.textContent = `/${key}`;
+  urlElement.appendChild(copyAnchor);
+  urlElement.appendChild(document.createTextNode("\u00A0 "));
+  urlElement.appendChild(urlAnchor);
   row.insertCell().appendChild(urlElement);
   row.insertCell().appendChild(document.createTextNode(hits));
 
-  const actionElement = document.createElement("div");
-  actionElement.innerHTML = `<a class="text-danger" data-toggle="modal" data-target="#deleteSavedModal" data-key="${key}" href="#">
-    <i class="fa fa-trash-o"></i></a>`;
-  row.insertCell().appendChild(actionElement);
+  const actionAnchor = document.createElement("a");
+  actionAnchor.classList.add("text-danger");
+  actionAnchor.setAttribute("data-toggle", "modal");
+  actionAnchor.setAttribute("data-target", "#deleteSavedModal");
+  actionAnchor.setAttribute("data-key", key);
+  actionAnchor.innerHTML = `<i class="fa fa-trash-o"></i>`;
+  row.insertCell().appendChild(actionAnchor);
 }
 
 function copyURL(path) {
-  const url = baseURL() + 's/' + path;
+  const url = baseURL() + "s/" + path;
   copy(url);
   showAlert(`Copied ${url}!`);
 }
 
 function deleteSaved() {
-  const key = $("#modal-confirm-message").text().slice(26, -1);
+  const key = $("#modal-confirm-message").text().slice(24, -1);
   fetch("./api/save/" + key, { method: "delete" }).then(() => {
     $("#deleteSavedModal").modal("hide");
     refresh();
@@ -45,7 +62,8 @@ function refresh() {
   fetch("./api/save")
     .then((resp) => resp.json())
     .then((resp) => {
-      table.innerHTML = '';
+      table.innerHTML = "";
+      $("h3").text(`Saved Contents (${resp.length})`);
       resp.forEach((item) => addRow(item));
     });
 }
@@ -54,6 +72,6 @@ $(document).ready(function () {
   refresh();
   $("#deleteSavedModal").on("show.bs.modal", function (event) {
     const key = $(event.relatedTarget).data("key");
-    $(this).find(".modal-body p").text(`Are you sure to delete /${key}?`);
+    $("#modal-confirm-message").text(`Are you sure to delete /${key}?`);
   });
 });

@@ -8,11 +8,11 @@ router.get("/", (req, res) => {
   });
 });
 
-router.get('*', (req, res) => {
+router.get("/:key", (req, res) => {
   db.getByKey(req.params.key)
     .then((resp) => {
       res.redirect(resp.value);
-      db.incrementCounter(req.params.key)
+      db.incrementCounter(req.params.key);
     })
     .catch((error) => {
       res.sendStatus(404);

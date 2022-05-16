@@ -16,6 +16,7 @@ db.run(`CREATE TABLE IF NOT EXISTS shortened (
     key TEXT PRIMARY KEY NOT NULL,
     dateCreated DATETIME DEFAULT CURRENT_TIMESTAMP,
     value TEXT NOT NULL,
+    description TEXT,
     isURL INTEGER DEFAULT 0,
     isVisible INTEGER DEFAULT 1,
     hits INTEGER DEFAULT 0)`);
@@ -31,12 +32,12 @@ async function generateKey() {
   throw Error("Could not generate a unique key.");
 }
 
-function insert(key, value, isURL = false, isVisible = true) {
+function insert(key, value, description, isURL = false, isVisible = true) {
   return promiseWrapper(async (resultHandler) => {
     if (!key) key = await generateKey();
     return db.run(
-      "INSERT OR REPLACE INTO shortened (key, value, isURL, isVisible) VALUES (?, ?, ?, ?)",
-      [key, value, isURL, isVisible],
+      "INSERT OR REPLACE INTO shortened (key, value, description, isURL, isVisible) VALUES (?, ?, ?, ?, ?)",
+      [key, value, description, isURL, isVisible],
       resultHandler
     );
   })
@@ -84,7 +85,7 @@ function incrementCounter(key) {
 function getVisibles() {
   return promiseWrapper((resultHandler) =>
     db.all(
-      "select key, dateCreated, value, isURL, hits from shortened where isVisible = 1 order by dateCreated desc",
+      "select key, dateCreated, value, description, isURL, hits from shortened where isVisible = 1 order by dateCreated desc",
       undefined,
       resultHandler
     )
@@ -92,7 +93,6 @@ function getVisibles() {
 }
 
 function deleteRow(key) {
-  console.log('❗delete key:', key);
   return promiseWrapper((resultHandler) =>
     db.run(
       "delete from shortened where key = ?",

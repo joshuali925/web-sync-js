@@ -107,6 +107,7 @@ $(document).ready(function () {
       body: JSON.stringify({
         id: focusIndex,
         key: $("#form-key-input").val(),
+        description: $("#form-description-input").val(),
         isURL: document.getElementById("form-isURL").checked,
         isVisible: document.getElementById("form-isVisible").checked,
       }),
@@ -119,7 +120,7 @@ $(document).ready(function () {
           console.error(json);
           showAlert(`Error: ${JSON.stringify(json.error)}`, 3000, "danger");
         } else {
-          copy(baseURL() + json.key)
+          copy(baseURL() + "s/" + json.key);
           showAlert(`Saved to /${json.key}, copied to clipboard`, 3000);
         }
       });
