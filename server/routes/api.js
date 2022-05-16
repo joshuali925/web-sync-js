@@ -50,4 +50,10 @@ router.get("/save", async function (req, res) {
   res.send(resp);
 });
 
+router.delete("/save/:key", async function (req, res) {
+  const key = req.params.key;
+  const resp = await db.deleteRow(key);
+  res.send(resp);
+});
+
 module.exports = router;

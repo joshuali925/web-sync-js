@@ -91,6 +91,19 @@ function getVisibles() {
   );
 }
 
+function deleteRow(key) {
+  console.log('❗delete key:', key);
+  return promiseWrapper((resultHandler) =>
+    db.run(
+      "delete from shortened where key = ?",
+      key,
+      resultHandler
+    )
+  )
+    .then(() => ({ key }))
+    .catch((error) => ({ error }));
+}
+
 function all(sql, params) {
   return promiseWrapper((resultHandler) => db.all(sql, params, resultHandler));
 }
@@ -118,6 +131,7 @@ function close() {
 module.exports = {
   all,
   close,
+  deleteRow,
   each,
   get,
   getByKey,

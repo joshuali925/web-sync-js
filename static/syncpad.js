@@ -100,14 +100,13 @@ $(document).ready(function () {
   });
 
   $("#form-save-button").click(function (e) {
-    console.log("❗e:", e);
     e.preventDefault();
     fetch("./api/save", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         id: focusIndex,
-        key: $("#form-key").val(),
+        key: $("#form-key-input").val(),
         isURL: document.getElementById("form-isURL").checked,
         isVisible: document.getElementById("form-isVisible").checked,
       }),
@@ -115,12 +114,17 @@ $(document).ready(function () {
       .then((resp) => resp.json())
       .then((json) => {
         $("#saveModalContainer").modal("hide");
+        $("#form-key-input").val("");
         if (json.error) {
-          console.error(json)
-          showAlert(`Error: ${JSON.stringify(json.error)}`, 3000, 'danger');
+          console.error(json);
+          showAlert(`Error: ${JSON.stringify(json.error)}`, 3000, "danger");
         } else {
           showAlert(`Saved to /s/${json.key}`, 3000);
         }
       });
+  });
+
+  $("#saveModalContainer").on("shown.bs.modal", function () {
+    $("#form-key-input").focus();
   });
 });
