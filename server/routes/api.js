@@ -8,11 +8,7 @@ const normalizeIndex = (id) => {
 };
 
 router.get("/get/:id?", function (req, res) {
-  console.log(
-    `[${new Date().toISOString()}] ${
-      req.headers["x-forwarded-for"] || req.socket.remoteAddress
-    } /api/get/${req.params.id}`
-  );
+  utils.log(req, "GET /api/get/" + req.params.id);
   res.send(
     req.textList[normalizeIndex(req.params.id)].split("\n").join("<br>")
   );
@@ -25,11 +21,7 @@ router.get("/get_text", function (req, res) {
 const appendAPIRegex = /^\/append\/(\d+)\/(.+)$/;
 router.get(appendAPIRegex, function (req, res) {
   const [_, id, text] = req.url.match(appendAPIRegex);
-  console.log(
-    `[${new Date().toISOString()}] ${
-      req.headers["x-forwarded-for"] || req.socket.remoteAddress
-    } /api/append/${id}`
-  );
+  utils.log(req, "GET /api/append/" + id);
   const index = normalizeIndex(id);
   req.textList[index] += "\n" + text;
   req.io.emit("update textarea", req.textList[index], index);
@@ -37,6 +29,7 @@ router.get(appendAPIRegex, function (req, res) {
 });
 
 router.post("/save", async function (req, res) {
+  utils.log(req, "POST /api/save, key=" + req.body.key);
   const index = req.body.id;
   const key = req.body.key;
   const value = req.textList[index];
@@ -48,6 +41,7 @@ router.post("/save", async function (req, res) {
 });
 
 router.get("/save", async function (req, res) {
+  utils.log(req, "GET /api/save");
   const resp = await db.getPublics();
   for (let i = 0; i < resp.length; i++) {
     const item = resp[i];
@@ -59,11 +53,13 @@ router.get("/save", async function (req, res) {
 });
 
 router.get("/save/:key", async function (req, res) {
+  utils.log(req, "GET /api/save/" + req.params.key);
   const resp = await db.getByKey(req.params.key);
   res.send(resp);
 });
 
 router.delete("/save/:key", async function (req, res) {
+  utils.log(req, "DELETE /api/save/" + req.params.key);
   const key = req.params.key;
   const resp = await db.deleteRow(key);
   res.send(resp);

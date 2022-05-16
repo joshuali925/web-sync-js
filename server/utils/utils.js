@@ -6,12 +6,15 @@ const imagesPath = `${ROOT}/static/images`;
 const tempContentQRPath = `${ROOT}/static/images/temp`;
 
 function validURL(str) {
-  var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+  var pattern = new RegExp(
+    "^(https?:\\/\\/)?" + // protocol
+      "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
+      "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+      "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
+      "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+      "(\\#[-a-z\\d_]*)?$",
+    "i"
+  ); // fragment locator
   return !!pattern.test(str);
 }
 
@@ -31,6 +34,27 @@ function getPrivateIPAddress() {
     }
   }
   return "0.0.0.0";
+}
+
+function log(...args) {
+  let msg = `[${new Date().toISOString()}]`;
+  if (typeof args[0] === "object") {
+    const ip =
+      args[0]?.headers?.["x-forwarded-for"] ||
+      args[0]?.socket?.remoteAddress ||
+      args[0]?.handshake?.headers?.["x-forwarded-for"] ||
+      args[0]?.conn?.remoteAddress;
+    if (ip) {
+      msg += `[${ip}]`;
+      [, ...args] = args;
+    }
+  }
+  console.log(msg, ...args);
+}
+
+function logError(...args) {
+  let msg = `[${new Date().toISOString()}]`;
+  console.error(msg, ...args);
 }
 
 function getHostPort(arg) {
@@ -108,6 +132,8 @@ module.exports = {
   createTextQR,
   getHostPort,
   getPrivateURL,
+  log,
+  logError,
   onExitHandler,
   onInitHandler,
   saveFile,

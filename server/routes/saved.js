@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const db = require("../utils/db");
+const utils = require("../utils/utils");
 const { ROOT } = require("../utils/constants");
 
 router.get("/", (req, res) => {
@@ -9,6 +10,7 @@ router.get("/", (req, res) => {
 });
 
 router.get("/:key", (req, res) => {
+  utils.log(req, "GET /" + req.params.key);
   db.getByKey(req.params.key)
     .then((resp) => {
       if (resp.isURL) res.redirect(resp.value);

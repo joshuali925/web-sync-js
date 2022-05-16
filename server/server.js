@@ -33,11 +33,7 @@ app.use("/api", require("./routes/api"));
 app.use("/", require("./routes/syncpad")); // keep at bottom for fallback
 
 io.on("connection", (socket) => {
-  console.log(
-    `[${new Date().toISOString()}] ${
-      socket.handshake.headers["x-forwarded-for"] || socket.conn.remoteAddress
-    } connected`
-  );
+  utils.log(socket, "client connected");
   socket.emit("update all textarea", textList);
   socket.on("sync text", (text, index) => {
     textList[index] = text;
@@ -57,11 +53,11 @@ io.on("connection", (socket) => {
 
     Promise.all(chunks.map((chunk, i) => utils.createTextQR(chunk, i)))
       .then(() => {
-        console.log(chunks.length, "QR created");
+        utils.log(socket, chunks.length, "QR created");
         io.emit("qr ready", chunks.length);
       })
-      .catch((e) => {
-        console.log("error", e);
+      .catch((error) => {
+        utils.logError(error);
       });
   });
 });

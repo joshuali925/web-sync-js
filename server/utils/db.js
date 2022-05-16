@@ -6,6 +6,7 @@
 
 const fs = require("fs");
 const sqlite3 = require("sqlite3").verbose();
+const utils = require("../utils/utils");
 const { ROOT } = require("../utils/constants");
 
 const dataDir = `${ROOT}/data`;
@@ -47,10 +48,10 @@ function insert(key, value, description, isURL = false, isPublic = true) {
 
 function promiseWrapper(callback) {
   return new Promise((resolve, reject) => {
-    callback((err, result) => {
-      if (err) {
-        console.log(err);
-        reject(err);
+    callback((error, result) => {
+      if (error) {
+        utils.logError(error);
+        reject(error);
       } else {
         resolve(result);
       }
@@ -94,11 +95,7 @@ function getPublics() {
 
 function deleteRow(key) {
   return promiseWrapper((resultHandler) =>
-    db.run(
-      "delete from shortened where key = ?",
-      key,
-      resultHandler
-    )
+    db.run("delete from shortened where key = ?", key, resultHandler)
   )
     .then(() => ({ key }))
     .catch((error) => ({ error }));

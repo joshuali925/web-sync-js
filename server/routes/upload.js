@@ -9,6 +9,7 @@ router.get("/", function (req, res) {
 });
 
 router.post("/", function (req, res) {
+  utils.log(req, "POST /upload");
   if (req.files) {
     const files = req.files.file;
     if (files.length) {
