@@ -29,6 +29,7 @@ app.use((req, res, next) => {
 
 app.use("/", require("./routes/syncpad"));
 app.use("/upload", require("./routes/upload"));
+app.use("/s", require("./routes/saved"));
 app.use("/api", require("./routes/api"));
 
 io.on("connection", (socket) => {

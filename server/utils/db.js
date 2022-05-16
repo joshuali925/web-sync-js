@@ -1,3 +1,9 @@
+/*
+ * # to check sqlite database
+ * venv && pip install litecli
+ * venv/bin/litecli data/sqlite3.db
+ */
+
 const fs = require("fs");
 const sqlite3 = require("sqlite3").verbose();
 const { ROOT } = require("../utils/constants");
@@ -8,6 +14,7 @@ const db = new sqlite3.Database(`${dataDir}/sqlite3.db`);
 
 db.run(`CREATE TABLE IF NOT EXISTS shortened (
     key TEXT PRIMARY KEY NOT NULL,
+    dateCreated DATETIME DEFAULT CURRENT_TIMESTAMP,
     value TEXT NOT NULL,
     isURL INTEGER DEFAULT 0,
     isVisible INTEGER DEFAULT 1,
@@ -64,10 +71,20 @@ function getByKey(key) {
   );
 }
 
+function incrementCounter(key) {
+  return promiseWrapper((resultHandler) =>
+    db.run(
+      "UPDATE shortened SET hits = hits + 1 WHERE key = ?",
+      key,
+      resultHandler
+    )
+  );
+}
+
 function getVisibles() {
   return promiseWrapper((resultHandler) =>
     db.all(
-      "select key, isURL, hits from shortened where isVisible = 1",
+      "select key, dateCreated, value, isURL, hits from shortened where isVisible = 1 order by dateCreated desc",
       undefined,
       resultHandler
     )
@@ -99,11 +116,12 @@ function close() {
 }); */
 
 module.exports = {
-  insert,
+  all,
+  close,
+  each,
   get,
   getByKey,
   getVisibles,
-  all,
-  each,
-  close,
+  incrementCounter,
+  insert,
 };

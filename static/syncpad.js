@@ -3,20 +3,9 @@ const socket = io();
 let textList = ["", "", ""];
 let focusIndex = 0;
 
-function copyAll() {
+function copySyncPadContent() {
   const input = document.getElementById("textarea");
-  if (navigator.userAgent.match(/ipad|iphone/i)) {
-    // for iOS
-    const range = document.createRange();
-    range.selectNodeContents(input);
-    const selection = window.getSelection();
-    selection.removeAllRanges();
-    selection.addRange(range);
-    input.setSelectionRange(0, 999999);
-  } else {
-    input.select();
-  }
-  document.execCommand("copy");
+  copy(input);
   $("#copybutton").focus();
   showAlert("All copied!");
 }
@@ -25,7 +14,7 @@ function generateQR() {
   socket.emit("generate qr", focusIndex);
 }
 
-function clearAll() {
+function clearSyncPadContent() {
   console.log("clearing text:");
   console.log($("#textarea").val());
   $("#textarea").val("");

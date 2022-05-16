@@ -36,13 +36,17 @@ router.get(appendAPIRegex, function (req, res) {
 });
 
 router.post("/save", async function (req, res) {
-  console.log("❗req:", req.body);
   const index = req.body.id;
   const key = req.body.key;
   const value = req.textList[index];
   const isURL = req.body.isURL || false;
   const isVisible = req.body.isVisible || true;
   const resp = await db.insert(key, value, isURL, isVisible);
+  res.send(resp);
+});
+
+router.get("/save", async function (req, res) {
+  const resp = await db.getVisibles();
   res.send(resp);
 });
 

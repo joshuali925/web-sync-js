@@ -15,11 +15,7 @@
   ></div>
   <div class="flex-container">
     <!-- invisible elements to center the buttons START -->
-    <div
-      class="btn-group flex-wrap btn-group-toggle"
-      id="invisible"
-      data-toggle="buttons"
-    >
+    <div class="btn-group flex-wrap btn-group-toggle mr-auto invisible">
       <label class="btn btn-outline-secondary">
         <input type="radio" name="options" /> 1
       </label>
@@ -33,7 +29,7 @@
     <!-- invisible elements to center the buttons END -->
     <button
       type="button"
-      onclick="copyAll()"
+      onclick="copySyncPadContent()"
       id="copybutton"
       class="btn btn-success"
     >
@@ -56,12 +52,15 @@
     >
       <i class="fa fa-qrcode"></i> QR Code
     </button>
-    <button type="button" onclick="clearAll()" class="btn btn-danger">
+    <button
+      type="button"
+      onclick="clearSyncPadContent()"
+      class="btn btn-danger"
+    >
       <i class="fa fa-trash-o"></i> Clear
     </button>
     <div
-      class="btn-group flex-wrap btn-group-toggle"
-      id="button-group"
+      class="btn-group flex-wrap btn-group-toggle ml-auto"
       data-toggle="buttons"
     >
       <label class="btn btn-outline-secondary active" id="label1">
@@ -105,7 +104,7 @@
   aria-hidden="true"
 >
   <div
-    class="modal-dialog modal-dialog-centered modal-lg"
+    class="modal-dialog modal-dialog-centered modal-sm"
     role="document"
     style="width: 534px"
   >
@@ -134,13 +133,20 @@
             <label class="form-check-label" for="form-isVisible">public</label>
           </div>
           <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="form-isURL" />
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="form-isURL"
+              checked
+            />
             <label class="form-check-label" for="form-isURL">
               url redirect
             </label>
           </div>
           <div class="modal-footer" style="margin-top: 10px">
-            <button id="form-save-button" type="submit" class="btn btn-primary">Save</button>
+            <button id="form-save-button" type="submit" class="btn btn-primary">
+              Save
+            </button>
           </div>
         </form>
       </div>

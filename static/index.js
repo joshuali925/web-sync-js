@@ -15,6 +15,30 @@ function showAlert(message, lifeTime = 1000, status = "success") {
   }, lifeTime);
 }
 
+function copy(target) {
+  let shouldRemoveElement = false;
+  if (typeof target === 'string') {
+    const text = target;
+    target = document.createElement("textarea");
+    target.value = text;
+    document.body.appendChild(target);
+    shouldRemoveElement = true;
+  }
+  if (navigator.userAgent.match(/ipad|iphone/i)) {
+    // for iOS
+    const range = document.createRange();
+    range.selectNodeContents(target);
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+    target.setSelectionRange(0, 999999);
+  } else {
+    target.select();
+  }
+  document.execCommand("Copy");
+  if (shouldRemoveElement) target.remove();
+}
+
 $(document).ready(function () {
   $("li.active").removeClass("active");
   $('a[href="' + location.pathname + '"]')
