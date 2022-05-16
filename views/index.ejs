@@ -48,6 +48,8 @@
     </button>
   </nav>
 
+  <!-- keep it above include(page) if using external js -->
+  <script src="/index.js"></script>
   <%- include(page) %>
   <div
     class="alert alert-success"
@@ -61,7 +63,6 @@
       z-index: 1000;
     "
   ></div>
-  <script src="/index.js"></script>
 </body>
 
 </html>
