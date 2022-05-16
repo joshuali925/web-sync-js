@@ -16,6 +16,10 @@
   margin-right: 2px;
 }
 
+.modal {
+  overflow-y: auto !important;
+}
+
 #button-group {
   margin-left: auto;
 }

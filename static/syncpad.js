@@ -3,14 +3,6 @@ const socket = io();
 let textList = ["", "", ""];
 let focusIndex = 0;
 
-function debounce(fn, ms) {
-  let timer = 0;
-  return function (...args) {
-    clearTimeout(timer);
-    timer = setTimeout(fn.bind(this, ...args), ms || 0);
-  };
-}
-
 function copyAll() {
   const input = document.getElementById("textarea");
   if (navigator.userAgent.match(/ipad|iphone/i)) {
@@ -40,13 +32,6 @@ function clearAll() {
   socket.emit("sync text", "", focusIndex);
   updateTextList("", focusIndex);
   showAlert("Cleared!");
-}
-
-function showAlert(message) {
-  $("#alert").html(message).slideDown(200);
-  setTimeout(() => {
-    $("#alert").slideUp(200);
-  }, 1000);
 }
 
 function switchFocus(index) {
@@ -101,9 +86,9 @@ $(document).ready(function () {
   });
 
   socket.on("qr ready", (length) => {
-    $(".modal-body").empty();
+    $("#qrcode-modal-body").empty();
     for (let i = length - 1; i >= 0; i--) {
-      $(".modal-body").prepend(
+      $("#qrcode-modal-body").prepend(
         `<img id="qrcode-img-${i}" src="images/temp/temp_qr${i}.png?${new Date().getTime()}" width="500" height="500" />`
       );
     }
@@ -123,5 +108,30 @@ $(document).ready(function () {
       $("#syncpad-nav").text(syncpadNavText + "*");
       debouncedSync();
     }
+  });
+
+  $("#form-save-button").click(function (e) {
+    console.log("❗e:", e);
+    e.preventDefault();
+    fetch("./api/save", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id: focusIndex,
+        key: $("#form-key").val(),
+        isURL: document.getElementById("form-isURL").checked,
+        isVisible: document.getElementById("form-isVisible").checked,
+      }),
+    })
+      .then((resp) => resp.json())
+      .then((json) => {
+        $("#saveModalContainer").modal("hide");
+        if (json.error) {
+          console.error(json)
+          showAlert(`Error: ${JSON.stringify(json.error)}`, 3000, 'danger');
+        } else {
+          showAlert(`Saved to /s/${json.key}`, 3000);
+        }
+      });
   });
 });

@@ -1,47 +1,151 @@
 <!DOCTYPE html>
 <div class="container-fluid">
   <div class="form-group">
-    <textarea class="form-control" id="textarea" style="height: 70vh"></textarea>
+    <textarea
+      class="form-control"
+      id="textarea"
+      style="height: 70vh"
+    ></textarea>
   </div>
-  <div class="alert alert-success" role="alert" id="alert" style="display: none; position: absolute; z-index: 1000;"></div>
+  <div
+    class="alert alert-success"
+    role="alert"
+    id="alert"
+    style="display: none; position: absolute; z-index: 1000"
+  ></div>
   <div class="flex-container">
-    <div class="btn-group flex-wrap btn-group-toggle" id="invisible" data-toggle="buttons">
+    <!-- invisible elements to center the buttons START -->
+    <div
+      class="btn-group flex-wrap btn-group-toggle"
+      id="invisible"
+      data-toggle="buttons"
+    >
       <label class="btn btn-outline-secondary">
-        <input type="radio" name="options"> 1
+        <input type="radio" name="options" /> 1
       </label>
       <label class="btn btn-outline-secondary">
-        <input type="radio" name="options"> 2
+        <input type="radio" name="options" /> 2
       </label>
       <label class="btn btn-outline-secondary">
-        <input type="radio" name="options"> 3
+        <input type="radio" name="options" /> 3
       </label>
     </div>
-    <button type="button" onclick="copyAll()" id="copybutton" class="btn btn-success"><i
-      class="fa fa-clipboard"></i> Copy</button>
-    <button type="button" onclick="generateQR()" class="btn btn-success" data-toggle="modal" data-target="#exampleModalCenter">
-      <i class="fa fa-qrcode"></i> QR Code</button>
-    <button type="button" onclick="clearAll()" id="clearbutton" class="btn btn-danger"><i
-      class="fa fa-trash-o"></i> Clear</button>
-    <div class="btn-group flex-wrap btn-group-toggle" id="button-group" data-toggle="buttons">
+    <!-- invisible elements to center the buttons END -->
+    <button
+      type="button"
+      onclick="copyAll()"
+      id="copybutton"
+      class="btn btn-success"
+    >
+      <i class="fa fa-clipboard"></i> Copy
+    </button>
+    <button
+      type="button"
+      class="btn btn-success"
+      data-toggle="modal"
+      data-target="#saveModalContainer"
+    >
+      <i class="fa fa-hdd-o"></i> Save
+    </button>
+    <button
+      type="button"
+      onclick="generateQR()"
+      class="btn btn-info"
+      data-toggle="modal"
+      data-target="#qrCodeModalContainer"
+    >
+      <i class="fa fa-qrcode"></i> QR Code
+    </button>
+    <button type="button" onclick="clearAll()" class="btn btn-danger">
+      <i class="fa fa-trash-o"></i> Clear
+    </button>
+    <div
+      class="btn-group flex-wrap btn-group-toggle"
+      id="button-group"
+      data-toggle="buttons"
+    >
       <label class="btn btn-outline-secondary active" id="label1">
-        <input type="radio" name="options" id="focus1" checked> 1
+        <input type="radio" name="options" id="focus1" checked /> 1
       </label>
       <label class="btn btn-outline-secondary" id="label2">
-        <input type="radio" name="options" id="focus2"> 2
+        <input type="radio" name="options" id="focus2" /> 2
       </label>
       <label class="btn btn-outline-secondary" id="label3">
-        <input type="radio" name="options" id="focus3"> 3
+        <input type="radio" name="options" id="focus3" /> 3
       </label>
     </div>
   </div>
 </div>
-<div class="modal fade bd-example-modal-lg" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg" role="document" style="width: 534px">
+<div
+  class="modal fade bd-example-modal-lg"
+  id="qrCodeModalContainer"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="qrCodeModalContainerTitle"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-centered modal-lg"
+    role="document"
+    style="width: 534px"
+  >
     <div class="modal-content">
-      <div class="modal-body">
+      <div class="modal-body" id="qrcode-modal-body">
         <div>Loading</div>
       </div>
     </div>
   </div>
 </div>
+<div
+  class="modal fade bd-example-modal-lg"
+  id="saveModalContainer"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="saveModalContainerTitle"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-centered modal-lg"
+    role="document"
+    style="width: 534px"
+  >
+    <div class="modal-content">
+      <div class="modal-body">
+        <form id="form-save">
+          <div class="form-group">
+            <label for="form-key">Custom path</label>
+            <input
+              type="text"
+              class="form-control"
+              id="form-key"
+              autocomplete="off"
+            />
+            <small id="emailHelp" class="form-text text-muted">
+              Leave blank for a random path.
+            </small>
+          </div>
+          <div class="form-check">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="form-isVisible"
+              checked
+            />
+            <label class="form-check-label" for="form-isVisible">public</label>
+          </div>
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="form-isURL" />
+            <label class="form-check-label" for="form-isURL">
+              url redirect
+            </label>
+          </div>
+          <div class="modal-footer" style="margin-top: 10px">
+            <button id="form-save-button" type="submit" class="btn btn-primary">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 <script src="syncpad.js"></script>
+

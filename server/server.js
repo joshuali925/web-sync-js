@@ -16,6 +16,7 @@ app.set("view engine", "ejs");
 app.set("views", `${ROOT}/views`);
 app.use(express.static(`${ROOT}/static`));
 app.use(require("express-fileupload")());
+app.use(express.json());
 
 http.listen(port, host, () => utils.onInitHandler(privateURL));
 

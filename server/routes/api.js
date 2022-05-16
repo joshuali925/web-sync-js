@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const db = require("../utils/db");
 
 const normalizeIndex = (id) => {
   if (!id || id < 1 || id > 3) id = 1;
@@ -32,6 +33,17 @@ router.get(appendAPIRegex, function (req, res) {
   req.textList[index] += "\n" + text;
   req.io.emit("update textarea", req.textList[index], index);
   res.send(req.textList[index].split("\n").join("<br>"));
+});
+
+router.post("/save", async function (req, res) {
+  console.log("❗req:", req.body);
+  const index = req.body.id;
+  const key = req.body.key;
+  const value = req.textList[index];
+  const isURL = req.body.isURL || false;
+  const isVisible = req.body.isVisible || true;
+  const resp = await db.insert(key, value, isURL, isVisible);
+  res.send(resp);
 });
 
 module.exports = router;

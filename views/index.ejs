@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <!-- search v4 on https://fontawesome.com/v4/icons/ -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.7/css/fileinput.css" media="all"
     rel="stylesheet" type="text/css" />
@@ -44,24 +45,7 @@
   </nav>
 
   <%- include(page) %>
-  <script>
-    $(document).ready(function() {
-      $('li.active').removeClass('active');
-      $('a[href="' + location.pathname + '"]').closest('li').addClass('active'); 
-    });
-    $('#qrcodetext').hover(() => {
-      $('#qrcodeimg').fadeIn('fast');
-    });
-    $('#qrcodeimg').hover(() => {}, () => {
-      $('#qrcodeimg').fadeOut('slow');
-    });
-    $('#qrcodeimg').click(() => {}, () => {
-      $('#qrcodeimg').fadeOut('slow');
-    });
-    $('#toggle-theme').click(() => {}, () => {
-      $('body')[0].className = $('body')[0].className === 'bootstrap' ? 'bootstrap-dark' : 'bootstrap';
-    });
-  </script>
+  <script src="index.js"></script>
 </body>
 
 </html>
