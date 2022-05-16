@@ -39,8 +39,8 @@ router.post("/save", async function (req, res) {
   const index = req.body.id;
   const key = req.body.key;
   const value = req.textList[index];
-  const isURL = req.body.isURL || false;
-  const isVisible = req.body.isVisible || true;
+  const isURL = req.body.isURL;
+  const isVisible = req.body.isVisible;
   const resp = await db.insert(key, value, isURL, isVisible);
   res.send(resp);
 });
