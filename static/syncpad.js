@@ -69,6 +69,10 @@ $(document).ready(function () {
     if (focusIndex === index) $("#textarea").val(text);
   });
 
+  socket.on("update user count", function (count) {
+    $("#user-count").text(`${count} client${count > 1 ? "s" : ""}`);
+  });
+
   socket.on("update all textarea", function (texts) {
     updateTextList(texts);
     $("#textarea").val(texts[focusIndex]);

@@ -7,13 +7,32 @@
 
 .flex-container {
   display: flex;
+}
+
+.flex-container > #user-count {
+  flex: 1;
+  display: flex;
+  justify-content: flex-start;
+  align-items: initial;
+}
+
+.flex-container > #flex-buttons-container {
+  flex: 4;
+  display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.flex-container > button {
+.flex-container > #flex-buttons-container > button {
   margin-left: 2px;
   margin-right: 2px;
+}
+
+.flex-container > #flex-buttons-group-container {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .modal {

@@ -32,8 +32,10 @@ app.use("/s", require("./routes/saved"));
 app.use("/api", require("./routes/api"));
 app.use("/", require("./routes/root")); // keep at bottom for fallback
 
+// https://stackoverflow.com/questions/32674391/io-emit-vs-socket-emit/40829919#40829919
 io.on("connection", (socket) => {
   utils.log(socket, "client connected");
+  io.emit("update user count", io.engine.clientsCount);
   socket.emit("update all textarea", textList);
   socket.on("sync text", (text, index) => {
     textList[index] = text;
@@ -59,6 +61,10 @@ io.on("connection", (socket) => {
       .catch((error) => {
         utils.logError(error);
       });
+  });
+
+  socket.on("disconnect", function () {
+    socket.broadcast.emit("update user count", io.engine.clientsCount);
   });
 });
 
