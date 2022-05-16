@@ -30,7 +30,7 @@ app.use((req, res, next) => {
 app.use("/upload", require("./routes/upload"));
 app.use("/s", require("./routes/saved"));
 app.use("/api", require("./routes/api"));
-app.use("/", require("./routes/syncpad")); // keep at bottom for fallback
+app.use("/", require("./routes/root")); // keep at bottom for fallback
 
 io.on("connection", (socket) => {
   utils.log(socket, "client connected");

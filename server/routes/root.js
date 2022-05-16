@@ -9,7 +9,7 @@ router.get("/", (req, res) => {
   });
 });
 
-router.get("/:key", (req, res) => {
+router.get(["/:key", "/s/:key"], (req, res) => {
   utils.log(req, "GET /s/" + req.params.key);
   db.getByKey(req.params.key)
     .then((resp) => {
