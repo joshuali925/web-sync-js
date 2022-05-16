@@ -7,7 +7,8 @@ function addRow({ key, dateCreated, value, description, isURL, hits }) {
   if (isURL) {
     targetElement = document.createElement("a");
     targetElement.setAttribute("href", value);
-    targetElement.textContent = value;
+    targetElement.textContent =
+      value.length > 50 ? value.substring(0, 50) + "..." : value;
   } else {
     targetElement = document.createElement("div");
     targetElement.textContent = value;

@@ -45,8 +45,8 @@ router.get("/save", async function (req, res) {
   const resp = await db.getPublics();
   for (let i = 0; i < resp.length; i++) {
     const item = resp[i];
-    if (!item.isURL && item.value.length > 30) {
-      item.value = item.value.substring(0, 30) + "...";
+    if (!item.isURL && item.value.length > 50) {
+      item.value = item.value.substring(0, 50) + "...";
     }
   }
   res.send(resp);
