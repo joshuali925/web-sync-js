@@ -18,14 +18,17 @@ router.get("/get_text", function (req, res) {
   res.redirect("/api/get/1");
 });
 
-const appendAPIRegex = /^\/append\/(\d+)\/(.+)$/;
-router.get(appendAPIRegex, function (req, res) {
-  const [_, id, text] = req.url.match(appendAPIRegex);
-  utils.log(req, "GET /api/append/" + id);
-  const index = normalizeIndex(id);
-  req.textList[index] += "\n" + text;
+router.post("/append/:id?", function (req, res) {
+  utils.log(req, "POST /api/append/" + req.params.id);
+  const index = normalizeIndex(req.params.id);
+  if (!req.body.text) {
+    res.status(400).send("missing key 'text'");
+    return;
+  }
+  if (req.textList[index].length > 0) req.textList[index] += "\n";
+  req.textList[index] += req.body.text;
   req.io.emit("update textarea", req.textList[index], index);
-  res.send(req.textList[index].split("\n").join("<br>"));
+  res.send(req.textList[index]);
 });
 
 router.post("/save", async function (req, res) {
