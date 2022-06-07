@@ -46,6 +46,18 @@ function insert(key, value, description, isURL = false, isPublic = true) {
     .catch((error) => ({ error }));
 }
 
+function updateValue(key, value, isURL = false) {
+  return promiseWrapper(async (resultHandler) => {
+    return db.run(
+      "UPDATE shortened SET value = ?, isURL = ? where key = ?",
+      [value, isURL, key],
+      resultHandler
+    );
+  })
+    .then(() => ({ key }))
+    .catch((error) => ({ error }));
+}
+
 function promiseWrapper(callback) {
   return new Promise((resolve, reject) => {
     callback((error, result) => {
@@ -123,4 +135,5 @@ module.exports = {
   getPublics,
   incrementCounter,
   insert,
+  updateValue,
 };

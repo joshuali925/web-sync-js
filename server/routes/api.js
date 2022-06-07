@@ -43,6 +43,15 @@ router.post("/save", async function (req, res) {
   res.send(resp);
 });
 
+router.post("/update", async function (req, res) {
+  utils.log(req, "POST /api/update, key=" + req.body.key);
+  const key = req.body.key;
+  const value = req.body.text;
+  const isURL = utils.validURL(value);
+  const resp = await db.updateValue(key, value, isURL);
+  res.send(resp);
+});
+
 router.get("/save", async function (req, res) {
   utils.log(req, "GET /api/save");
   const resp = await db.getPublics();

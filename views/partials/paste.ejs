@@ -2,28 +2,78 @@
 <div class="container-fluid w-75 mt-3" style="min-width: 410px">
   <h3 class="text-muted" id="heading">&nbsp;</h3>
   <small class="text-muted" id="date-heading">&nbsp;</small>
-  <textarea class="form-control mt-2" readonly style="height: 70vh"></textarea>
+  <div class="form-group">
+    <textarea
+      id="paste-textarea"
+      class="form-control mt-2"
+      readonly
+      style="height: 70vh"
+    ></textarea>
+  </div>
+  <div class="flex-container">
+    <div id="flex-buttons-container">
+      <button
+        type="button"
+        id="edit-or-save-button"
+        onclick="editOrSave()"
+        class="btn btn-info"
+      >
+        <i class="fa fa-pencil-square-o"></i><span> Edit</span>
+      </button>
+    </div>
+  </div>
 </div>
 <script>
-  $(document).ready(function () {
-    fetch(
-      "/api/save/" +
-        window.location.pathname.substring(
-          window.location.pathname.lastIndexOf("/") + 1
-        )
-    )
-      .then((resp) => resp.json())
-      .then((resp) => {
-        $("textarea").text(resp.value);
-          $("#heading").text(resp.description || "Saved Content");
-        const date = moment.utc(resp.dateCreated);
-        const dateElement = document.getElementById("date-heading")
-        dateElement.textContent = "Created " + date.fromNow();
-        dateElement.setAttribute(
-          "title",
-          date.local().format("YYYY-MM-DD HH:mm:ss")
-        );
-      });
-  });
+  const key = window.location.pathname.substring(
+    window.location.pathname.lastIndexOf("/") + 1
+  );
+  fetch("/api/save/" + key)
+    .then((resp) => resp.json())
+    .then((resp) => {
+      $("textarea").text(resp.value);
+      $("#heading").text(resp.description || "Saved Content");
+      const date = moment.utc(resp.dateCreated);
+      const dateElement = document.getElementById("date-heading");
+      dateElement.textContent = "Created " + date.fromNow();
+      dateElement.setAttribute(
+        "title",
+        date.local().format("YYYY-MM-DD HH:mm:ss")
+      );
+    });
+  function editOrSave() {
+    const textArea = document.getElementById("paste-textarea");
+    const button = document.getElementById("edit-or-save-button");
+    const icon = button.getElementsByTagName("i")[0];
+    const text = button.getElementsByTagName("span")[0];
+    const isEdit = /Edit/.test(button.textContent);
+    if (isEdit) {
+      icon.className = icon.className.replace("fa-pencil-square-o", "fa-hdd-o");
+      button.className = button.className.replace("info", "success");
+      text.textContent = text.textContent.replace("Edit", "Save");
+      textArea.toggleAttribute("readonly");
+    } else {
+      fetch("/api/update", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key, text: textArea.value }),
+      })
+        .then((resp) => resp.json())
+        .then((json) => {
+          if (json.error) {
+            console.error(json);
+            showAlert(`Error: ${JSON.stringify(json.error)}`, 3000, "danger");
+          } else {
+            showAlert(`Updated /${json.key}`, 3000);
+            icon.className = icon.className.replace(
+              "fa-hdd-o",
+              "fa-pencil-square-o"
+            );
+            button.className = button.className.replace("success", "info");
+            text.textContent = text.textContent.replace("Save", "Edit");
+            textArea.toggleAttribute("readonly");
+          }
+        });
+    }
+  }
 </script>
 
