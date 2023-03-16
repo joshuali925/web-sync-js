@@ -13,14 +13,21 @@ const dataDir = `${ROOT}/data`;
 if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
 const db = new sqlite3.Database(`${dataDir}/sqlite3.db`);
 
-db.run(`CREATE TABLE IF NOT EXISTS shortened (
-    key TEXT PRIMARY KEY NOT NULL,
-    dateCreated DATETIME DEFAULT CURRENT_TIMESTAMP,
-    value TEXT NOT NULL,
-    description TEXT,
-    isURL INTEGER DEFAULT 0,
-    isPublic INTEGER DEFAULT 1,
-    hits INTEGER DEFAULT 0)`);
+function init() {
+  return promiseWrapper(async (resultHandler) => {
+    return db.run(
+      `CREATE TABLE IF NOT EXISTS shortened (
+        key TEXT PRIMARY KEY NOT NULL,
+        dateCreated DATETIME DEFAULT CURRENT_TIMESTAMP,
+        value TEXT NOT NULL,
+        description TEXT,
+        isURL INTEGER DEFAULT 0,
+        isPublic INTEGER DEFAULT 1,
+        hits INTEGER DEFAULT 0)`,
+      resultHandler
+    );
+  });
+}
 
 async function generateKey() {
   for (let i = 0; i < 10; i++) {
@@ -126,6 +133,7 @@ function close() {
 }
 
 module.exports = {
+  init,
   all,
   close,
   deleteRow,

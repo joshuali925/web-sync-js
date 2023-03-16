@@ -4,12 +4,29 @@ const http = require("http").Server(app);
 const io = require("socket.io")(http);
 const utils = require("./utils/utils");
 const { ROOT } = require("./utils/constants");
+const db = require("./utils/db");
 
 const args = process.argv.slice(2);
 const { host, port } = utils.getHostPort(args?.[0]);
 const privateURL = utils.getPrivateURL(host, port);
 
 let textList = ["", "", ""];
+
+db.init()
+  .then(() =>
+    Promise.allSettled([db.getByKey("0"), db.getByKey("1"), db.getByKey("2")])
+  )
+  .then((results) =>
+    results.map((initValueResult, i) => {
+      if (initValueResult.value != null) {
+        textList[i] = initValueResult.value.value;
+      } else {
+        textList[i] = "";
+        db.insert(`${i}`, "", "", false, false);
+      }
+    })
+  );
+
 utils.createQR(privateURL);
 
 app.set("view engine", "ejs");
@@ -41,6 +58,7 @@ io.on("connection", (socket) => {
     textList[index] = text;
     // send to all except requester
     socket.broadcast.emit("update textarea", text, index);
+    db.updateValue(index, text);
   });
 
   // generate on server side for longer max char length
